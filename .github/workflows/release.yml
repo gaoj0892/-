@@ -57,7 +57,7 @@ jobs:
           ls -la "dlt-predictor-${{ github.ref_name }}-dist.zip"
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: dlt-predictor-${{ github.ref_name }}-dist.zip
           # 正文手工整理自 CHANGELOG（见 CONTRIBUTING 的发布流程），不使用自动生成
