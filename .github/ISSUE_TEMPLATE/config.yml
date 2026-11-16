@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 官方开奖公告（数据核对请以此为准）
+    url: https://www.lottery.gov.cn/kj/kjlb.html?dlt
+    about: 若发现软件内数据与官方不一致，请先引用官方公告核对，再提交 issue。
+  - name: 使用方式与免责说明
+    url: https://github.com/gaoj0892/dlt-predictor#readme
+    about: 本项目为离线单页工具，所有数据仅保存在本地浏览器；不提供投注、代购、兑奖服务。

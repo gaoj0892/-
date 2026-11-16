@@ -1,0 +1,18 @@
+# CODEOWNERS
+# 语法说明：路径模式 + 负责人。匹配顺序为「最后一个匹配的规则生效」，故特殊规则放在后面。
+# 详见 .github/pull_request_template.md 与 docs/adr/
+
+# 默认：全部文件指派给仓库 owner
+* @gaoj0892
+
+# ⚠️ 改动前必读 docs/adr/0001-iife-classic-script-delivery.md
+# 这里的任何一行都可能让 dist/index.html 在 file:// 下白屏（开发模式却完全正常）
+/vite.config.js @gaoj0892
+/index.html @gaoj0892
+/package.json @gaoj0892
+
+# 流水线与协作配置本体
+/.github/ @gaoj0892
+
+# 种子数据是算法与验收基准的共同输入，改动需 owner 复核
+/src/data/ @gaoj0892

@@ -1,0 +1,91 @@
+name: Bug 报告
+description: 报告一个可复现的缺陷（不接收任何号码推断类请求）
+title: '[bug] '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。请先确认：这不是「能否提高中奖概率」一类的问题 —— 单注头奖概率恒为 1/21,425,712，
+        任何统计或选号方法都无法改变它，本仓库不接受此类请求。
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 请写出最小复现路径（点了哪个页签、改了哪些参数、点了哪个按钮）
+      placeholder: |
+        1. 打开「选号策略」页
+        2. 前区池策略选「自定义号码池」，只选 3 个号
+        3. 点击「开始生成」
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望结果
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际结果
+      description: 有无报错文案、Toast 提示内容
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: 浏览器与版本
+      placeholder: Chrome 130 / Edge 130 / Safari 18 / Firefox 132
+    validations:
+      required: true
+
+  - type: dropdown
+    id: protocol
+    attributes:
+      label: 打开方式
+      description: 这是本项目最容易出问题的一环，请务必选择
+      options:
+        - 双击 dist/index.html（file:// 协议）
+        - npm run dev（本地开发服务器）
+        - npm run preview
+        - 其它（在下方说明）
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: 控制台报错
+      description: 按 F12 → Console，把红色报错完整粘贴（若为白屏请务必提供）
+      render: shell
+    validations:
+      required: false
+
+  - type: input
+    id: period
+    attributes:
+      label: 涉及的期号（如与数据相关）
+      placeholder: '26123'
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: data-source
+    attributes:
+      label: 数据来源确认
+      options:
+        - label: 我使用的是内置种子数据（未经导入改动）
+        - label: 我自行修改过 localStorage 或导入过数据（请在下方说明来源）
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 补充信息
+      description: 截图、录屏、相关 issue 链接
+    validations:
+      required: false

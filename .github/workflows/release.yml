@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+permissions:
+  # 私有库的 GITHUB_TOKEN 默认只读，上传 Release 附件必须显式声明 write
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # 取完整历史，便于按 tag 关联 CHANGELOG 段落
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # 发版前同样过质量门：产物不具备「双击可运行」特性则不发版
+      - name: Verify dist（交付特性断言）
+        run: node scripts/verify-dist.mjs
+
+      - name: Package dist（下载即双击可跑）
+        run: |
+          mkdir -p release
+          cp -r dist/index.html dist/assets release/
+          cp README.md LICENSE NOTICE.md release/
+          cd release
+          zip -r "../dlt-predictor-${{ github.ref_name }}-dist.zip" .
+          cd ..
+          ls -la "dlt-predictor-${{ github.ref_name }}-dist.zip"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dlt-predictor-${{ github.ref_name }}-dist.zip
+          # 正文手工整理自 CHANGELOG（见 CONTRIBUTING 的发布流程），不使用自动生成
+          generate_release_notes: false
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

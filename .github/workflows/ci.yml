@@ -1,0 +1,120 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+      - 'LICENSE'
+      - 'NOTICE.md'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# 同一 ref 的新推送会取消上一次仍在跑的流水线，省额度
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Check file size（业务 ≤300 / 测试 ≤400 行）
+        run: node scripts/check-file-size.mjs
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Prettier
+        run: npm run format:check
+
+      - name: Typecheck（src/lib 的 JSDoc 契约）
+        run: npm run typecheck
+
+  test:
+    name: test (${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: true
+      matrix:
+        # PR 只跑 22（快反馈）；main push 跑 20 + 22，验证 engines 下限
+        node: ${{ github.event_name == 'push' && fromJSON('["20","22"]') || fromJSON('["22"]') }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Vitest
+        run: npx vitest run --reporter=verbose
+
+      - name: Vitest with coverage（仅 Node 22）
+        if: matrix.node == '22'
+        run: npx vitest run --coverage
+
+      - name: Upload coverage（仅 Node 22）
+        if: matrix.node == '22'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+          retention-days: 5
+          if-no-files-found: ignore
+
+  verify-dist:
+    name: verify-dist
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # 本项目核心质量门：8 条断言证明 dist/index.html 双击可运行
+      # 说明见 docs/adr/0001-iife-classic-script-delivery.md
+      - name: Verify dist（交付特性断言）
+        run: node scripts/verify-dist.mjs
+
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ github.sha }}
+          path: dist/
+          retention-days: 7
+          if-no-files-found: error
