@@ -15,7 +15,6 @@ import path from 'node:path';
 import {
   isRealDate,
   normalizeNo,
-  normalizeDate,
   validateDraw,
   parseDrawText,
   parseDrawJson,

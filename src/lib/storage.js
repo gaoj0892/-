@@ -25,7 +25,7 @@ function getBackend() {
       window.localStorage.removeItem(probeKey);
       return window.localStorage;
     }
-  } catch (error) {
+  } catch {
     return null;
   }
   return null;
@@ -50,7 +50,7 @@ function readRaw(key) {
     try {
       const value = backend.getItem(key);
       if (value !== null && value !== undefined) return value;
-    } catch (error) {
+    } catch {
       // 忽略，走内存兜底
     }
   }
@@ -89,7 +89,7 @@ function removeRaw(key) {
   try {
     backend.removeItem(key);
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -123,7 +123,7 @@ export function loadDraws() {
       front: item.front.map(Number).sort((a, b) => a - b),
       back: item.back.map(Number).sort((a, b) => a - b),
     }));
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -157,7 +157,7 @@ export function loadMeta() {
   if (!raw) return null;
   try {
     return JSON.parse(raw);
-  } catch (error) {
+  } catch {
     return null;
   }
 }
@@ -195,7 +195,7 @@ export function getSetting(key, fallback = null) {
   if (raw === null || raw === undefined) return fallback;
   try {
     return JSON.parse(raw);
-  } catch (error) {
+  } catch {
     return raw;
   }
 }

@@ -279,6 +279,9 @@ export function repeatCount(prevFront, front) {
  * @param {number} x 自变量（> 0）
  * @return {number} ln Γ(x)
  */
+/* eslint-disable no-loss-of-precision --
+ * Lanczos 系数与 sqrt(2π) 必须与文献值逐位一致，改动会直接影响卡方 p 值。
+ * 这里的十进制字面量在 IEEE-754 double 下的最近值即标准实现所用值，属预期行为。 */
 function gammaln(x) {
   const coefficients = [
     76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155,
@@ -294,6 +297,7 @@ function gammaln(x) {
   }
   return -tmp + Math.log((2.5066282746310005 * series) / x);
 }
+/* eslint-enable no-loss-of-precision */
 
 /**
  * 正则化下不完全伽马函数 P(a, x) 的级数展开形式。

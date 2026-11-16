@@ -291,14 +291,10 @@ export function runBacktest(params, options = {}) {
 
     let drawPrize = 0;
     let best = { level: 0, frontHits: 0, backHits: 0, note: null };
-    let drawFront = 0;
-    let drawBack = 0;
     let drawNotes = 0;
 
     generated.groups.forEach((group) => {
       const hit = countHits(group, draw);
-      drawFront += hit.frontHits;
-      drawBack += hit.backHits;
       drawPrize += hit.prize;
       frontSum += hit.frontHits;
       frontSqSum += hit.frontHits * hit.frontHits;
