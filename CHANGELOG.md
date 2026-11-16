@@ -20,7 +20,7 @@
 - `scripts/verify-dist.mjs`：8 条产物断言，守护「双击 `dist/index.html` 可运行」这条交付特性
 - `scripts/format-seed-data.mjs`：种子数据整形为逐期一行，并在每次运行时校验结构不变量
 - `jsconfig.json` + `npm run typecheck`：仅对 `src/lib` 开启 `checkJs`，把 188 处 JSDoc 变成可执行契约
-- 测试目录重组为 `tests/unit/`（48 用例）与 `tests/acceptance/`（37 用例），`@` 别名指向 `src`
+- 测试目录重组为 `tests/unit/`（52 用例，含 `download.js` 的 4 个用例）与 `tests/acceptance/`（37 用例），`@` 别名指向 `src`
 - GitHub Actions：`ci.yml`（lint / test matrix / verify-dist）与 `release.yml`（tag 触发构建 + 断言 + 打包上传）
 - Issue 模板（bug / feature / config）、PR 模板、CODEOWNERS、dependabot 配置
 - 文档全套：CONTRIBUTING、CHANGELOG、LICENSE（MIT）、NOTICE、SECURITY、ADR 0001–0003、README 补节

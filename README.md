@@ -27,7 +27,7 @@ npm ci             # 严格按 package-lock.json 安装
 npm run dev        # 本地开发服务
 npm run build      # 构建到 dist/
 npm run verify:dist # 可选：验证 dist/ 仍可双击运行
-npx vitest run     # 运行测试（85 个用例）
+npx vitest run     # 运行测试（89 个用例）
 ```
 
 构建完成后双击 `dist/index.html` 即可看到最终交付形态。
@@ -42,7 +42,7 @@ npx vitest run     # 运行测试（85 个用例）
 | `npm run lint`          | 先跑文件规模守门脚本，再跑 ESLint（`--max-warnings 0`） |
 | `npm run format`        | Prettier 格式化全部文件                                 |
 | `npm run format:check`  | 只检查格式，不写入（CI 使用）                           |
-| `npm run test`          | vitest 单次运行（85 个用例）                            |
+| `npm run test`          | vitest 单次运行（89 个用例）                            |
 | `npm run test:watch`    | vitest 监听模式                                         |
 | `npm run test:coverage` | 覆盖率报告（仅统计 `src/lib`，含阈值校验）              |
 | `npm run typecheck`     | 用 `jsconfig.json` 对 `src/lib` 做 JSDoc 类型检查       |
@@ -116,7 +116,7 @@ src/
     download.js    浏览器下载（Blob + a[download]）
   data/            内置种子数据（唯一数据源，每期一行）
 tests/
-  unit/            lib 与回测单元测试（48 用例）
+  unit/            lib / 回测 / download 单元测试（52 用例）
   acceptance/      QA 全量验收测试（37 用例，含全量基准核对）
 scripts/           构建/守门脚本（verify-dist、check-file-size、format-seed-data）
 docs/

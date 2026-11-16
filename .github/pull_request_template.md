@@ -19,7 +19,7 @@ Closes #
 ## 检查清单（合并前必须全部勾选）
 
 - [ ] `npm run lint` 通过（含文件规模守门 + ESLint `--max-warnings 0`）
-- [ ] `npx vitest run` 全绿，**85 个基线用例一个不少**（改动测试需说明）
+- [ ] `npx vitest run` 全绿，**89 个基线用例一个不少**（改动测试需说明）
 - [ ] `npm run build` 成功，且 `node scripts/verify-dist.mjs` 8/8 通过
 - [ ] **已人工双击 `dist/index.html` 验证界面完整可用**（改动 `vite.config.js` / `index.html` / `package.json` / 依赖者**必须**附截图）
 - [ ] 免责表述未被弱化（随机性、不构成购彩依据、1/21,425,712 等原句仍在位）

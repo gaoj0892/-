@@ -5,7 +5,7 @@
 ## 三条不可破坏的约束
 
 1. **构建产物必须能在 `file://` 下双击运行。** 即 `dist/index.html` 双击打开后界面完整可用。为此 `vite.config.js` 的 `classicScriptPlugin`、`base: './'`、`format: 'iife'`、`inlineDynamicImports: true`、`cssCodeSplit: false`、`enforce: 'post'`、`transformIndexHtml.order: 'post'` 全部不可删改语义。改动前必读 [ADR 0001](docs/adr/0001-iife-classic-script-delivery.md)。
-2. **85 个测试用例必须全绿，数量不得减少。** 修改统计或选号算法须说明口径变化并补充用例。
+2. **89 个测试用例必须全绿，数量不得减少。** 修改统计或选号算法须说明口径变化并补充用例。
 3. **免责表述不得弱化。** 任何 UI 改动都不得移除或弱化「随机性」「不构成购彩依据」「1/21,425,712」等表述。
 
 ## 环境
