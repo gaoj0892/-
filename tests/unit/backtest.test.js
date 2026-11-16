@@ -6,7 +6,7 @@ import {
   normalTwoSidedP,
   runBacktest,
   runUniformBaseline,
-} from './backtest.js';
+} from '@/lib/backtest.js';
 
 /**
  * 构造 n 期合法的合成开奖数据（升序，号码互不重复）。

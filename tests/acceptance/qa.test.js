@@ -21,7 +21,7 @@ import {
   parseDrawFile,
   drawsToCsv,
   sortUnique,
-} from './parse.js';
+} from '@/lib/parse.js';
 
 import {
   frequency,
@@ -37,7 +37,7 @@ import {
   hotColdLists,
   subsetByRange,
   sortByPeriodAsc,
-} from './stats.js';
+} from '@/lib/stats.js';
 
 import {
   mulberry32,
@@ -46,7 +46,7 @@ import {
   buildPools,
   constraintsSatisfied,
   generateNumbers,
-} from './generator.js';
+} from '@/lib/generator.js';
 
 import {
   loadDraws,
@@ -57,10 +57,10 @@ import {
   getSetting,
   setSetting,
   hasLocalStorage,
-} from './storage.js';
+} from '@/lib/storage.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const SEED_PATH = path.resolve(HERE, '../data/dlt_history.json');
+const SEED_PATH = path.resolve(HERE, '../../src/data/dlt_history.json');
 const SEED = JSON.parse(readFileSync(SEED_PATH, 'utf8'));
 const SEED_DRAWS = sortByPeriodAsc(SEED.draws);
 

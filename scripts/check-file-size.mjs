@@ -34,9 +34,9 @@ const EXTENSIONS = new Set(['.js', '.jsx', '.css']);
 const WHITELIST = new Set([
   // T03/S10 待拆：GeneratorPanel（拆完立即从本表删除）
   'src/components/GeneratorPanel.jsx',
-  // S09 待迁：两个测试文件迁到 tests/ 后行数上限为 400，超限部分留待 A6 处理
-  'src/lib/qa.test.js',
-  'src/lib/lib.test.js',
+  // A6（P2）待拆分测试：全量基准用例集中在一个文件，拆分收益低于回归风险
+  'tests/acceptance/qa.test.js',
+  'tests/unit/lib.test.js',
   // A6（P2）待拆分：
   'src/components/BacktestPanel.jsx', // 453 行 → features/backtest/
   'src/components/DataManager.jsx', // 451 行 → features/data/

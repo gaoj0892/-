@@ -7,7 +7,7 @@ import {
   parseDrawJson,
   parseDrawText,
   validateDraw,
-} from './parse.js';
+} from '@/lib/parse.js';
 import {
   bigSmallRatio,
   chiSquarePValue,
@@ -23,7 +23,7 @@ import {
   sumOf,
   sumSeries,
   zoneDistribution,
-} from './stats.js';
+} from '@/lib/stats.js';
 import {
   buildHistoryIndex,
   buildPools,
@@ -32,8 +32,8 @@ import {
   mulberry32,
   normalizeSeed,
   weightedSample,
-} from './generator.js';
-import { clearAll, loadDraws, saveDraws, setSetting, getSetting } from './storage.js';
+} from '@/lib/generator.js';
+import { clearAll, loadDraws, saveDraws, setSetting, getSetting } from '@/lib/storage.js';
 
 const DRAWS = [
   { no: '24001', date: '2024-01-01', front: [1, 2, 3, 4, 5], back: [1, 2] },

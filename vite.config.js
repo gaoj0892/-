@@ -1,5 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+/** 项目根目录（ESM 下没有 __dirname） */
+const ROOT_DIR = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * 把 Vite 默认的 ES module 产物改写成经典脚本（classic script）。
@@ -36,6 +41,12 @@ function classicScriptPlugin() {
 export default defineConfig({
   base: './',
   plugins: [react(), classicScriptPlugin()],
+  resolve: {
+    // 测试与业务代码统一用 @/lib/... 引入，避免为新增目录反复调整 ../ 深度
+    alias: {
+      '@': path.resolve(ROOT_DIR, 'src'),
+    },
+  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
@@ -54,7 +65,7 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['src/**/*.test.{js,jsx}'],
+    include: ['tests/**/*.test.{js,jsx}'],
     // 覆盖率只统计纯逻辑层（src/lib）：React 面板无单元测试，纳入会稀释指标
     coverage: {
       provider: 'v8',
