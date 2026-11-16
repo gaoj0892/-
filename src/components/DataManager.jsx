@@ -5,27 +5,9 @@ import { drawsToCsv, parseDrawFile } from '../lib/parse.js';
 import { sortByPeriodAsc, sumOf } from '../lib/stats.js';
 import { todayStamp } from '../lib/format.js';
 import { hasLocalStorage } from '../lib/storage.js';
+import { downloadText } from '../lib/download.js';
 
 const PAGE_SIZES = [20, 50, 100];
-
-/**
- * 触发浏览器下载（Blob + a[download]）。
- * @param {string} filename 文件名
- * @param {string} content 文件内容
- * @param {string} mimeType MIME 类型
- * @return {void}
- */
-function downloadText(filename, content, mimeType) {
-  const blob = new Blob([content], { type: mimeType });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  window.setTimeout(() => URL.revokeObjectURL(url), 1500);
-}
 
 /**
  * 小统计卡片。

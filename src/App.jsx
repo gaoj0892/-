@@ -4,7 +4,7 @@ import DataManager from './components/DataManager.jsx';
 import FrequencyPanel from './components/FrequencyPanel.jsx';
 import HotColdPanel from './components/HotColdPanel.jsx';
 import TrendPanel from './components/TrendPanel.jsx';
-import GeneratorPanel from './components/GeneratorPanel.jsx';
+import GeneratorPanel from './features/generator/index.jsx';
 import BacktestPanel from './components/BacktestPanel.jsx';
 import AboutPanel from './components/AboutPanel.jsx';
 import { sortByPeriodAsc } from './lib/stats.js';

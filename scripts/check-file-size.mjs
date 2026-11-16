@@ -32,8 +32,6 @@ const EXTENSIONS = new Set(['.js', '.jsx', '.css']);
  * 每一条都对应架构方案 §2.2 的拆分计划，拆完即删。
  */
 const WHITELIST = new Set([
-  // T03/S10 待拆：GeneratorPanel（拆完立即从本表删除）
-  'src/components/GeneratorPanel.jsx',
   // A6（P2）待拆分测试：全量基准用例集中在一个文件，拆分收益低于回归风险
   'tests/acceptance/qa.test.js',
   'tests/unit/lib.test.js',

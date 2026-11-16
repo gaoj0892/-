@@ -5,6 +5,7 @@ import { BallGroup } from './Ball.jsx';
 import { PRIZE_LEVELS, TICKET_PRICE, runBacktest } from '../lib/backtest.js';
 import { DEFAULT_PARAMS } from '../lib/generator.js';
 import { formatNumber, formatPercent, pad2, todayStamp } from '../lib/format.js';
+import { downloadText } from '../lib/download.js';
 
 const PERIOD_OPTIONS = [50, 100, 200, 500];
 const NOTE_OPTIONS = [1, 3, 5, 10];
@@ -53,25 +54,6 @@ const STRATEGIES = [
 const EXPECTED_FRONT = 25 / 35;
 /** 后区命中理论均值 2 × 2/12 */
 const EXPECTED_BACK = 4 / 12;
-
-/**
- * 触发浏览器下载。
- * @param {string} filename 文件名
- * @param {string} content 内容
- * @param {string} mimeType MIME
- * @return {void}
- */
-function downloadText(filename, content, mimeType) {
-  const blob = new Blob([content], { type: mimeType });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  window.setTimeout(() => URL.revokeObjectURL(url), 1500);
-}
 
 /**
  * 指标卡。
