@@ -1,0 +1,28 @@
+# 依赖
+node_modules/
+# 构建产物（走 CI artifact / Release 分发）
+dist/
+dist-*.zip
+*.zip
+# 验收截图原始目录（精选图另存 docs/screenshots/）
+qa_shots/
+# 覆盖率与缓存
+coverage/
+.vitest-before.json
+.vitest-after.json
+.names-before.json
+.eslintcache
+# 环境与编辑器
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+# 临时
+*.log
+tmp/
+# 种子数据整形时产生的本地备份
+src/data/*.json.bak
