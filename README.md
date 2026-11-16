@@ -8,11 +8,17 @@
 
 ## 快速开始
 
-**方式一：直接打开（无需环境）**
+### 普通用户：下载即用（无需环境）
 
-双击 `dist/index.html`，用浏览器打开即可。产物已改为经典脚本（IIFE）+ 相对路径，支持 `file://` 直接运行。原因见 [ADR 0001](docs/adr/0001-iife-classic-script-delivery.md)。
+1. 打开 [Releases](../../releases) 页，下载最新版本的 `dlt-predictor-v1.1.0-dist.zip`；
+2. 解压到任意目录；
+3. 双击解压目录里的 `index.html`，用浏览器打开即可。
 
-**方式二：开发模式**
+产物是经典脚本（IIFE）+ 相对路径，因此 `file://` 直接双击就能跑；原因见 [ADR 0001](docs/adr/0001-iife-classic-script-delivery.md)。
+
+> 仓库里**没有** `dist/` 目录（已被 `.gitignore` 排除），所以 `git clone` 下来不能直接双击 —— 请走上面的 Release 下载，或按下面的开发者路径自行构建。
+
+### 开发者：本地构建
 
 环境要求：**Node.js ≥ 20**（推荐 22，见 `.nvmrc`）、**npm ≥ 10**。
 
@@ -20,8 +26,11 @@
 npm ci             # 严格按 package-lock.json 安装
 npm run dev        # 本地开发服务
 npm run build      # 构建到 dist/
+npm run verify:dist # 可选：验证 dist/ 仍可双击运行
 npx vitest run     # 运行测试（85 个用例）
 ```
+
+构建完成后双击 `dist/index.html` 即可看到最终交付形态。
 
 ## 开发脚本
 
