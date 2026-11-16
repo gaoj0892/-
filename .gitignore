@@ -8,10 +8,12 @@ dist-*.zip
 qa_shots/
 # 覆盖率与缓存
 coverage/
-.vitest-before.json
-.vitest-after.json
-.names-before.json
+*.lcov
+# vitest / eslint 的临时报告（迁移前后用例名比对等一次性产物）
+.vitest-*.json
+.names-*.json
 .eslintcache
+eslint-report.json
 # 环境与编辑器
 .env
 .env.*
