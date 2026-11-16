@@ -50,11 +50,7 @@ export function normalizeNo(value) {
     if (num < 0) return '';
     return String(num).padStart(5, '0');
   }
-  return String(value)
-    .trim()
-    .replace(/^["']/, '')
-    .replace(/["']$/, '')
-    .trim();
+  return String(value).trim().replace(/^["']/, '').replace(/["']$/, '').trim();
 }
 
 /**
@@ -64,11 +60,7 @@ export function normalizeNo(value) {
  */
 export function normalizeDate(value) {
   if (value === null || value === undefined) return '';
-  const text = String(value)
-    .trim()
-    .replace(/^["']/, '')
-    .replace(/["']$/, '')
-    .trim();
+  const text = String(value).trim().replace(/^["']/, '').replace(/["']$/, '').trim();
 
   let year = 0;
   let month = 0;
@@ -98,9 +90,7 @@ export function normalizeDate(value) {
  */
 function toNumberList(value) {
   if (Array.isArray(value)) {
-    return value
-      .map((item) => Number(String(item).trim()))
-      .filter((n) => Number.isFinite(n));
+    return value.map((item) => Number(String(item).trim())).filter((n) => Number.isFinite(n));
   }
   if (typeof value === 'number') {
     return Number.isFinite(value) ? [value] : [];
@@ -284,7 +274,10 @@ export function parseDrawText(text) {
   }
 
   const seen = new Set();
-  const lines = text.replace(/\r\n?/g, '\n').replace(/^\uFEFF/, '').split('\n');
+  const lines = text
+    .replace(/\r\n?/g, '\n')
+    .replace(/^\uFEFF/, '')
+    .split('\n');
 
   lines.forEach((rawLine, index) => {
     const lineNo = index + 1;
@@ -388,7 +381,17 @@ export function parseDrawFile(text, fileName = '') {
  * @return {string} CSV 文本
  */
 export function drawsToCsv(draws) {
-  const header = ['期号', '开奖日期', '前区1', '前区2', '前区3', '前区4', '前区5', '后区1', '后区2'];
+  const header = [
+    '期号',
+    '开奖日期',
+    '前区1',
+    '前区2',
+    '前区3',
+    '前区4',
+    '前区5',
+    '后区1',
+    '后区2',
+  ];
   const rows = (draws || []).map((draw) => {
     const front = Array.isArray(draw.front) ? draw.front : [];
     const back = Array.isArray(draw.back) ? draw.back : [];

@@ -157,7 +157,11 @@ export default function DataManager({ draws, onChangeDraws, onResetSeed, meta })
     reader.onerror = () => {
       setImporting(false);
       if (fileRef.current) fileRef.current.value = '';
-      showToast('读取失败', ['浏览器无法读取该文件，请确认文件未损坏且格式为 txt / csv / json。'], 'error');
+      showToast(
+        '读取失败',
+        ['浏览器无法读取该文件，请确认文件未损坏且格式为 txt / csv / json。'],
+        'error',
+      );
     };
 
     reader.readAsText(file, 'UTF-8');
@@ -211,7 +215,11 @@ export default function DataManager({ draws, onChangeDraws, onResetSeed, meta })
         `\uFEFF${drawsToCsv(ordered)}`,
         'text/csv;charset=utf-8',
       );
-      showToast('导出成功', [`共 ${ordered.length} 期，已下载 CSV 文件（含 BOM，可直接用 Excel 打开）。`], 'ok');
+      showToast(
+        '导出成功',
+        [`共 ${ordered.length} 期，已下载 CSV 文件（含 BOM，可直接用 Excel 打开）。`],
+        'ok',
+      );
     } catch (error) {
       showToast('导出失败', [error.message], 'error');
     }
@@ -234,7 +242,8 @@ export default function DataManager({ draws, onChangeDraws, onResetSeed, meta })
    */
   const handleClear = () => {
     if (!window.confirm('清空全部本地开奖数据？清空后所有分析与选号功能将不可用。')) return;
-    if (!window.confirm('再次确认：本地数据将被删除（之后可通过「恢复内置种子数据」重新载入）。')) return;
+    if (!window.confirm('再次确认：本地数据将被删除（之后可通过「恢复内置种子数据」重新载入）。'))
+      return;
     onChangeDraws([]);
     showToast('已清空本地数据', ['可随时点击「恢复内置种子数据」重新载入。'], 'warn');
   };
@@ -254,7 +263,11 @@ export default function DataManager({ draws, onChangeDraws, onResetSeed, meta })
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        <StatCard label="当前总期数" value={`${summary.count} 期`} hint={hasLocalStorage() ? '存储：浏览器 localStorage' : '存储：内存（刷新即丢失）'} />
+        <StatCard
+          label="当前总期数"
+          value={`${summary.count} 期`}
+          hint={hasLocalStorage() ? '存储：浏览器 localStorage' : '存储：内存（刷新即丢失）'}
+        />
         <StatCard label="最早期号" value={summary.firstNo} hint={summary.firstDate || '—'} />
         <StatCard label="最新期号" value={summary.lastNo} hint={summary.lastDate || '—'} />
         <StatCard
@@ -309,7 +322,11 @@ export default function DataManager({ draws, onChangeDraws, onResetSeed, meta })
 
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <span className="chip">共 {filtered.length} 期符合条件</span>
-          <button type="button" className="btn-ghost btn-xs" onClick={() => setSortDesc((prev) => !prev)}>
+          <button
+            type="button"
+            className="btn-ghost btn-xs"
+            onClick={() => setSortDesc((prev) => !prev)}
+          >
             {sortDesc ? '期号：新 → 旧' : '期号：旧 → 新'}
           </button>
           <label className="flex items-center gap-1 text-xs text-slate-600">
@@ -329,7 +346,13 @@ export default function DataManager({ draws, onChangeDraws, onResetSeed, meta })
           </label>
 
           <span className="ml-auto flex flex-wrap gap-2">
-            <input ref={fileRef} type="file" accept=".txt,.csv,.json" className="hidden" onChange={handleImport} />
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".txt,.csv,.json"
+              className="hidden"
+              onChange={handleImport}
+            />
             <button
               type="button"
               className="btn-primary btn-xs"
@@ -354,8 +377,9 @@ export default function DataManager({ draws, onChangeDraws, onResetSeed, meta })
         </div>
 
         <p className="hint mt-2">
-          导入支持 .txt / .csv / .json，编码需为 UTF-8。合并策略：按期号去重，已存在的期号跳过不覆盖。
-          txt/csv 每行格式示例：<code className="rounded bg-slate-100 px-1">07001,2007-05-30,22,24,29,31,35,04,11</code>
+          导入支持 .txt / .csv / .json，编码需为
+          UTF-8。合并策略：按期号去重，已存在的期号跳过不覆盖。 txt/csv 每行格式示例：
+          <code className="rounded bg-slate-100 px-1">07001,2007-05-30,22,24,29,31,35,04,11</code>
         </p>
       </div>
 

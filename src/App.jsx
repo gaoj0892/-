@@ -53,9 +53,7 @@ function DisclaimerModal({ onConfirm }) {
             本软件提供的是「统计与选号辅助」：所有图表描述历史数据，所有选号结果均由随机算法生成，
             <strong>仅供参考娱乐，不构成任何购彩依据</strong>。
           </p>
-          <p>
-            大乐透单注头奖概率为 1/21,425,712。请理性购彩、量力而行；未成年人不得购彩或兑奖。
-          </p>
+          <p>大乐透单注头奖概率为 1/21,425,712。请理性购彩、量力而行；未成年人不得购彩或兑奖。</p>
         </div>
         <div className="mt-4 flex justify-end">
           <button type="button" className="btn-primary" onClick={onConfirm}>
@@ -100,7 +98,9 @@ export default function App() {
 
   useEffect(() => {
     if (!hasLocalStorage()) {
-      setStorageWarning('当前浏览器环境不支持 localStorage，数据与免责确认状态仅保存在内存中，刷新后会重置。');
+      setStorageWarning(
+        '当前浏览器环境不支持 localStorage，数据与免责确认状态仅保存在内存中，刷新后会重置。',
+      );
     }
   }, []);
 
@@ -157,8 +157,9 @@ export default function App() {
               超级大乐透 · 数据分析与选号辅助
             </h1>
             <p className="text-xs text-slate-500">
-              内置 {currentMeta.count} 期数据（{currentMeta.first_no || '—'} ~ {currentMeta.last_no || '—'}，
-              {currentMeta.first_date || '—'} ~ {currentMeta.last_date || '—'}）
+              内置 {currentMeta.count} 期数据（{currentMeta.first_no || '—'} ~{' '}
+              {currentMeta.last_no || '—'}，{currentMeta.first_date || '—'} ~{' '}
+              {currentMeta.last_date || '—'}）
             </p>
           </div>
 
@@ -193,7 +194,8 @@ export default function App() {
           </span>
           <p className="text-xs leading-relaxed text-amber-900 sm:text-[13px]">
             彩票开奖具有随机性，每期独立，历史数据与统计结果无法提高中奖概率。本软件所有统计与选号结果
-            <strong>仅供参考娱乐，不构成任何购彩依据</strong>；单注头奖概率 1/21,425,712。请理性购彩，未成年人不得购彩或兑奖。
+            <strong>仅供参考娱乐，不构成任何购彩依据</strong>；单注头奖概率
+            1/21,425,712。请理性购彩，未成年人不得购彩或兑奖。
           </p>
         </div>
       </div>

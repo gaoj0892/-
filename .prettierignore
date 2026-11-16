@@ -1,0 +1,21 @@
+# 构建产物与依赖
+dist
+node_modules
+coverage
+
+# 锁文件（102KB，格式化会产生无意义巨型 diff）
+package-lock.json
+
+# 种子数据：每期一行的紧凑格式是脚本产物，格式化会逐行展开成多行、diff 失去可读性
+src/data/**/*.json
+
+# 验收截图原始目录与交付压缩包
+qa_shots
+*.zip
+
+# 本地备份与测试报告
+*.bak
+*.log
+.vitest-before.json
+.vitest-after.json
+.names-before.json

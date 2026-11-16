@@ -173,7 +173,9 @@ function buildFrontWeights(pool, mode, freq, omission) {
     const omissionRaw = pool.map((n) => (omissionMap.get(n) || 0) + 1);
     const freqMean = mean(freqRaw) || 1;
     const omissionMean = mean(omissionRaw) || 1;
-    return pool.map((_, index) => 0.5 * (freqRaw[index] / freqMean) + 0.5 * (omissionRaw[index] / omissionMean));
+    return pool.map(
+      (_, index) => 0.5 * (freqRaw[index] / freqMean) + 0.5 * (omissionRaw[index] / omissionMean),
+    );
   }
   return pool.map(() => 1);
 }
@@ -392,7 +394,12 @@ export function generateNumbers(params, seed) {
     warnings.push('当前没有历史数据，频率/遗漏加权退化为等概率随机。');
   }
 
-  const frontWeights = buildFrontWeights(frontPool, p.frontWeightMode, pools.frontFreq, pools.frontOmission);
+  const frontWeights = buildFrontWeights(
+    frontPool,
+    p.frontWeightMode,
+    pools.frontFreq,
+    pools.frontOmission,
+  );
   const backWeights = backPool.map(() => 1);
 
   const asc = sortByPeriodAsc(draws);

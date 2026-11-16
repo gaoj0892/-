@@ -292,7 +292,10 @@ export default function TrendPanel({ draws }) {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="section-title">走势图表</h2>
-            <p className="hint mt-1">当前展示最近 {rows.length} 期（{rows.length ? `${rows[0].no} ~ ${rows[rows.length - 1].no}` : '—'}）。</p>
+            <p className="hint mt-1">
+              当前展示最近 {rows.length} 期（
+              {rows.length ? `${rows[0].no} ~ ${rows[rows.length - 1].no}` : '—'}）。
+            </p>
           </div>
           <div className="flex flex-wrap gap-1">
             {RANGE_OPTIONS.map((option) => (
@@ -315,28 +318,45 @@ export default function TrendPanel({ draws }) {
 
       <div className="card card-pad">
         <h3 className="section-title">1. 前区号码分布热力图</h3>
-        <p className="hint mb-1">横轴为号码 01-35，纵轴为最近期次（上方为最新）。颜色越深表示该号码在当期开奖中的排序位置越靠后。</p>
-        <Chart option={heatOption} height={Math.min(640, Math.max(320, rows.length * 13))} ariaLabel="前区号码分布热力图" />
-        <p className="hint mt-1">解读：每期固定有 5 个格子被点亮。若热力图看起来杂乱无规律，这本身就是随机性的直观表现。</p>
+        <p className="hint mb-1">
+          横轴为号码
+          01-35，纵轴为最近期次（上方为最新）。颜色越深表示该号码在当期开奖中的排序位置越靠后。
+        </p>
+        <Chart
+          option={heatOption}
+          height={Math.min(640, Math.max(320, rows.length * 13))}
+          ariaLabel="前区号码分布热力图"
+        />
+        <p className="hint mt-1">
+          解读：每期固定有 5 个格子被点亮。若热力图看起来杂乱无规律，这本身就是随机性的直观表现。
+        </p>
       </div>
 
       <div className="card card-pad">
         <h3 className="section-title">2. 前区和值走势</h3>
         <Chart option={sumOption} height={300} ariaLabel="前区和值走势折线图" />
-        <p className="hint mt-1">解读：前区 5 个号的和值理论均值为 90（绿色虚线）。实际和值围绕 90 上下波动，短期偏离属于正常随机波动。</p>
+        <p className="hint mt-1">
+          解读：前区 5 个号的和值理论均值为 90（绿色虚线）。实际和值围绕 90
+          上下波动，短期偏离属于正常随机波动。
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="card card-pad min-w-0">
           <h3 className="section-title">3a. 奇偶比分布</h3>
           <Chart option={oddEvenOption} height={280} ariaLabel="奇偶比分布柱状图" />
-          <p className="hint mt-1">解读：2:3 与 3:2 是 5 个号码中最常见的奇偶组合，因为组合数量最多；出现次数少不代表「该出现了」。</p>
+          <p className="hint mt-1">
+            解读：2:3 与 3:2 是 5
+            个号码中最常见的奇偶组合，因为组合数量最多；出现次数少不代表「该出现了」。
+          </p>
         </div>
 
         <div className="card card-pad min-w-0">
           <h3 className="section-title">3b. 大小比分布</h3>
           <Chart option={bigSmallOption} height={280} ariaLabel="大小比分布柱状图" />
-          <p className="hint mt-1">解读：小号 01-17、大号 18-35。极端比例（如 0:5）组合数最少，因此历史上出现次数自然偏少。</p>
+          <p className="hint mt-1">
+            解读：小号 01-17、大号 18-35。极端比例（如 0:5）组合数最少，因此历史上出现次数自然偏少。
+          </p>
         </div>
       </div>
 
@@ -344,12 +364,14 @@ export default function TrendPanel({ draws }) {
         <h3 className="section-title">4. 前区五区间分布</h3>
         <Chart option={zoneOption} height={300} ariaLabel="前区五区间分布柱状图" />
         <p className="hint mt-1">
-          解读：五个区间的理论期望相同（每期每区 1 个，绿色虚线 = 所选期数 × 1）。柱子高度不一致属于抽样波动，不能作为「某区将要回补」的依据。
+          解读：五个区间的理论期望相同（每期每区 1 个，绿色虚线 = 所选期数 ×
+          1）。柱子高度不一致属于抽样波动，不能作为「某区将要回补」的依据。
         </p>
       </div>
 
       <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs leading-relaxed text-amber-900">
-        <strong>提醒：</strong>走势图是历史记录的可视化，不是未来走势的外推。图表中任何「规律」若只依赖肉眼观察，都属于事后归纳。
+        <strong>提醒：</strong>
+        走势图是历史记录的可视化，不是未来走势的外推。图表中任何「规律」若只依赖肉眼观察，都属于事后归纳。
       </div>
     </div>
   );

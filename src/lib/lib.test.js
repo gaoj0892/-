@@ -43,7 +43,12 @@ const DRAWS = [
 
 describe('parse: 校验', () => {
   it('接受合法单期数据并排序号码（数字期号自动补零）', () => {
-    const result = validateDraw({ no: 7001, date: '2007/5/30', front: [35, 22, 24, 29, 31], back: [11, 4] });
+    const result = validateDraw({
+      no: 7001,
+      date: '2007/5/30',
+      front: [35, 22, 24, 29, 31],
+      back: [11, 4],
+    });
     expect(result.ok).toBe(true);
     expect(result.draw.no).toBe('07001');
     expect(result.draw.date).toBe('2007-05-30');
@@ -52,15 +57,26 @@ describe('parse: 校验', () => {
   });
 
   it('拒绝前区重复号码', () => {
-    const result = validateDraw({ no: '24001', date: '2024-01-01', front: [1, 1, 3, 4, 5], back: [1, 2] });
+    const result = validateDraw({
+      no: '24001',
+      date: '2024-01-01',
+      front: [1, 1, 3, 4, 5],
+      back: [1, 2],
+    });
     expect(result.ok).toBe(false);
     expect(result.reason).toContain('重复');
   });
 
   it('拒绝越界号码与非法日期', () => {
-    expect(validateDraw({ no: '24001', date: '2024-01-01', front: [1, 2, 3, 4, 36], back: [1, 2] }).ok).toBe(false);
-    expect(validateDraw({ no: '24001', date: '2024-02-30', front: [1, 2, 3, 4, 5], back: [1, 2] }).ok).toBe(false);
-    expect(validateDraw({ no: '2401', date: '2024-01-01', front: [1, 2, 3, 4, 5], back: [1, 2] }).ok).toBe(false);
+    expect(
+      validateDraw({ no: '24001', date: '2024-01-01', front: [1, 2, 3, 4, 36], back: [1, 2] }).ok,
+    ).toBe(false);
+    expect(
+      validateDraw({ no: '24001', date: '2024-02-30', front: [1, 2, 3, 4, 5], back: [1, 2] }).ok,
+    ).toBe(false);
+    expect(
+      validateDraw({ no: '2401', date: '2024-01-01', front: [1, 2, 3, 4, 5], back: [1, 2] }).ok,
+    ).toBe(false);
   });
 
   it('归一化期号与日期', () => {
@@ -109,7 +125,9 @@ describe('parse: 文本 / JSON 解析', () => {
   });
 
   it('导出 CSV 含表头且补零', () => {
-    const csv = drawsToCsv([{ no: '07001', date: '2007-05-30', front: [22, 24, 29, 31, 35], back: [4, 11] }]);
+    const csv = drawsToCsv([
+      { no: '07001', date: '2007-05-30', front: [22, 24, 29, 31, 35], back: [4, 11] },
+    ]);
     expect(csv.split('\n')[0]).toContain('期号');
     expect(csv).toContain('07001,2007-05-30,22,24,29,31,35,04,11');
   });
@@ -122,7 +140,7 @@ describe('stats: 频次与遗漏', () => {
     expect(freq[0].num).toBe(1);
     expect(freq[0].count).toBe(2);
     expect(freq[0].expected).toBeCloseTo((3 * 5) / 35, 10);
-    expect(freq[0].deviation).toBeCloseTo(2 - (15 / 35), 10);
+    expect(freq[0].deviation).toBeCloseTo(2 - 15 / 35, 10);
     expect(Number.isFinite(freq[0].z)).toBe(true);
   });
 
@@ -228,7 +246,12 @@ describe('generator: 随机性、可复现与约束', () => {
   it('加权无放回抽样不重复且数量正确', () => {
     const rng = mulberry32(7);
     const pool = Array.from({ length: 10 }, (_, index) => index + 1);
-    const picked = weightedSample(pool, pool.map((n) => n), 5, rng);
+    const picked = weightedSample(
+      pool,
+      pool.map((n) => n),
+      5,
+      rng,
+    );
     expect(picked).toHaveLength(5);
     expect(new Set(picked).size).toBe(5);
   });
@@ -239,7 +262,15 @@ describe('generator: 随机性、可复现与约束', () => {
       frontPoolMode: 'all',
       frontWeightMode: 'mix',
       backPoolMode: 'all',
-      constraints: { enabled: true, oddEven: true, bigSmall: true, sumRange: true, sumMin: 60, sumMax: 130, allowConsecutive: false },
+      constraints: {
+        enabled: true,
+        oddEven: true,
+        bigSmall: true,
+        sumRange: true,
+        sumMin: 60,
+        sumMax: 130,
+        allowConsecutive: false,
+      },
       draws: DRAWS,
     };
     const first = generateNumbers(params, 20240101);
@@ -254,7 +285,15 @@ describe('generator: 随机性、可复现与约束', () => {
     const params = {
       count: 8,
       frontWeightMode: 'freq',
-      constraints: { enabled: true, oddEven: true, bigSmall: true, sumRange: true, sumMin: 60, sumMax: 120, allowConsecutive: false },
+      constraints: {
+        enabled: true,
+        oddEven: true,
+        bigSmall: true,
+        sumRange: true,
+        sumMin: 60,
+        sumMax: 120,
+        allowConsecutive: false,
+      },
       draws: [
         { no: '24001', date: '2024-01-01', front: [3, 8, 14, 22, 31], back: [2, 9] },
         { no: '24002', date: '2024-01-03', front: [5, 11, 18, 26, 33], back: [4, 7] },
@@ -346,13 +385,26 @@ describe('generator: 随机性、可复现与约束', () => {
   });
 
   it('constraintsSatisfied 对关闭约束始终返回 true', () => {
-    expect(constraintsSatisfied({ front: [1, 2, 3, 4, 5], sum: 15 }, { enabled: false })).toBe(true);
-    expect(constraintsSatisfied({ front: [1, 2, 3, 4, 5], sum: 15 }, { enabled: true, sumRange: true, sumMin: 60, sumMax: 130 })).toBe(false);
+    expect(constraintsSatisfied({ front: [1, 2, 3, 4, 5], sum: 15 }, { enabled: false })).toBe(
+      true,
+    );
+    expect(
+      constraintsSatisfied(
+        { front: [1, 2, 3, 4, 5], sum: 15 },
+        { enabled: true, sumRange: true, sumMin: 60, sumMax: 130 },
+      ),
+    ).toBe(false);
   });
 
   it('排除号码后不会出现在结果中', () => {
     const result = generateNumbers(
-      { count: 3, excludeFront: [1, 2, 3, 4, 5, 6, 7], excludeBack: [1, 2], constraints: { enabled: false }, draws: DRAWS },
+      {
+        count: 3,
+        excludeFront: [1, 2, 3, 4, 5, 6, 7],
+        excludeBack: [1, 2],
+        constraints: { enabled: false },
+        draws: DRAWS,
+      },
       12345,
     );
     result.groups.forEach((group) => {

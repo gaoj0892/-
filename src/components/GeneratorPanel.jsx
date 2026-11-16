@@ -95,7 +95,11 @@ function NumberToggleGrid({ max, selected, onToggle, variant = 'front', mode = '
             aria-pressed={active}
             className={`${base} ${tone}`}
             onClick={() => onToggle(n)}
-            title={mode === 'exclude' ? `点击${active ? '取消排除' : '排除'} ${pad2(n)}` : `点击${active ? '移除' : '加入'} ${pad2(n)}`}
+            title={
+              mode === 'exclude'
+                ? `点击${active ? '取消排除' : '排除'} ${pad2(n)}`
+                : `点击${active ? '移除' : '加入'} ${pad2(n)}`
+            }
           >
             {pad2(n)}
           </button>
@@ -169,7 +173,10 @@ function GroupCard({ group, index, totalDraws }) {
 
       <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] text-slate-500 sm:grid-cols-3">
         {metrics.map((metric) => (
-          <div key={metric.label} className="flex justify-between gap-1 border-b border-dashed border-slate-100 pb-0.5">
+          <div
+            key={metric.label}
+            className="flex justify-between gap-1 border-b border-dashed border-slate-100 pb-0.5"
+          >
             <dt className="truncate">{metric.label}</dt>
             <dd className="font-medium text-slate-700">{metric.value}</dd>
           </div>
@@ -248,7 +255,11 @@ export default function GeneratorPanel({ draws }) {
     setLastSeed(output.seed);
 
     if (!output.groups.length) {
-      showToast('生成失败', output.warnings.length ? output.warnings : ['未生成任何组合。'], 'error');
+      showToast(
+        '生成失败',
+        output.warnings.length ? output.warnings : ['未生成任何组合。'],
+        'error',
+      );
       return;
     }
     if (output.warnings.length) {
@@ -298,7 +309,11 @@ export default function GeneratorPanel({ draws }) {
       }
       showToast('已复制', [`共 ${result.groups.length} 组已写入剪贴板。`], 'ok');
     } catch (error) {
-      showToast('复制失败', [`浏览器拒绝了剪贴板写入：${error.message}`, '可改用「导出 TXT」。'], 'error');
+      showToast(
+        '复制失败',
+        [`浏览器拒绝了剪贴板写入：${error.message}`, '可改用「导出 TXT」。'],
+        'error',
+      );
     }
   };
 
@@ -402,7 +417,9 @@ export default function GeneratorPanel({ draws }) {
                       updateParam({ frontPoolSize: clamp(event.target.value, 5, 35) })
                     }
                   />
-                  <span className="text-xs text-slate-400">（5-35，需 ≥ 5 才能抽出 5 个前区号）</span>
+                  <span className="text-xs text-slate-400">
+                    （5-35，需 ≥ 5 才能抽出 5 个前区号）
+                  </span>
                 </div>
               )}
               {params.frontPoolMode === 'custom' && (
@@ -466,7 +483,9 @@ export default function GeneratorPanel({ draws }) {
                     max={12}
                     className="input-sm w-20"
                     value={params.backPoolSize}
-                    onChange={(event) => updateParam({ backPoolSize: clamp(event.target.value, 2, 12) })}
+                    onChange={(event) =>
+                      updateParam({ backPoolSize: clamp(event.target.value, 2, 12) })
+                    }
                   />
                 </div>
               )}
@@ -495,7 +514,11 @@ export default function GeneratorPanel({ draws }) {
               onChange={(checked) => updateConstraints({ enabled: checked })}
               label="启用约束（关闭后仅做池内随机 + 组间去重）"
             />
-            <div className={params.constraints.enabled ? 'space-y-2 pl-5' : 'space-y-2 pl-5 opacity-50'}>
+            <div
+              className={
+                params.constraints.enabled ? 'space-y-2 pl-5' : 'space-y-2 pl-5 opacity-50'
+              }
+            >
               <CheckboxRow
                 checked={params.constraints.oddEven}
                 onChange={(checked) => updateConstraints({ oddEven: checked })}
@@ -519,7 +542,9 @@ export default function GeneratorPanel({ draws }) {
                     className="input-sm w-20"
                     value={params.constraints.sumMin}
                     disabled={!params.constraints.sumRange}
-                    onChange={(event) => updateConstraints({ sumMin: clamp(event.target.value, 15, 175) })}
+                    onChange={(event) =>
+                      updateConstraints({ sumMin: clamp(event.target.value, 15, 175) })
+                    }
                     aria-label="和值下限"
                   />
                   <span className="text-xs text-slate-400">~</span>
@@ -528,12 +553,16 @@ export default function GeneratorPanel({ draws }) {
                     className="input-sm w-20"
                     value={params.constraints.sumMax}
                     disabled={!params.constraints.sumRange}
-                    onChange={(event) => updateConstraints({ sumMax: clamp(event.target.value, 15, 175) })}
+                    onChange={(event) =>
+                      updateConstraints({ sumMax: clamp(event.target.value, 15, 175) })
+                    }
                     aria-label="和值上限"
                   />
                 </div>
                 {sumInvalid && (
-                  <p className="mt-1 pl-5 text-[11px] text-red-600">和值下限大于上限，生成时会自动对调。</p>
+                  <p className="mt-1 pl-5 text-[11px] text-red-600">
+                    和值下限大于上限，生成时会自动对调。
+                  </p>
                 )}
               </div>
               <CheckboxRow
@@ -547,7 +576,9 @@ export default function GeneratorPanel({ draws }) {
 
         <div className="card card-pad">
           <h3 className="section-title">排除号码</h3>
-          <p className="hint mt-1">点击号码即排除（灰色带删除线）。排除只影响本次抽号，不写入历史数据。</p>
+          <p className="hint mt-1">
+            点击号码即排除（灰色带删除线）。排除只影响本次抽号，不写入历史数据。
+          </p>
           <div className="mt-2 space-y-2">
             <div>
               <p className="label">前区排除（{params.excludeFront.length} 个）</p>
@@ -637,7 +668,9 @@ export default function GeneratorPanel({ draws }) {
                 <h3 className="section-title">生成结果（{result.groups.length} 组）</h3>
                 <p className="hint mt-0.5">
                   随机种子：<span className="font-mono text-slate-700">{result.seed}</span>
-                  {result.groups.some((group) => group.relaxed) ? ' · 部分组合放宽了约束' : ' · 全部组合满足约束'}
+                  {result.groups.some((group) => group.relaxed)
+                    ? ' · 部分组合放宽了约束'
+                    : ' · 全部组合满足约束'}
                 </p>
               </div>
               <div className="flex gap-2">
@@ -662,8 +695,8 @@ export default function GeneratorPanel({ draws }) {
             </div>
 
             <p className="hint mt-3">
-              「该组合历史是否开出」统计基于当前本地全部 {draws.length} 期数据。头奖单注命中概率为 1/21,425,712，
-              任何组合（包括历史上从未开出的组合）的中奖概率完全相同。
+              「该组合历史是否开出」统计基于当前本地全部 {draws.length} 期数据。头奖单注命中概率为
+              1/21,425,712， 任何组合（包括历史上从未开出的组合）的中奖概率完全相同。
             </p>
           </div>
         )}
@@ -672,9 +705,11 @@ export default function GeneratorPanel({ draws }) {
           <div className="card card-pad">
             <p className="text-sm font-medium text-slate-700">没有生成任何组合</p>
             <ul className="hint mt-1 space-y-0.5">
-              {(result.warnings.length ? result.warnings : ['请调整号码池或排除号码后重试。']).map((warning) => (
-                <li key={warning}>· {warning}</li>
-              ))}
+              {(result.warnings.length ? result.warnings : ['请调整号码池或排除号码后重试。']).map(
+                (warning) => (
+                  <li key={warning}>· {warning}</li>
+                ),
+              )}
             </ul>
           </div>
         )}
@@ -682,10 +717,12 @@ export default function GeneratorPanel({ draws }) {
         {!result && draws.length > 0 && (
           <div className="card card-pad">
             <p className="text-sm text-slate-600">
-              左侧设置好参数后点击「开始生成」。默认是等概率随机 —— 这已经是数学上最「公平」的选号方式。
+              左侧设置好参数后点击「开始生成」。默认是等概率随机 ——
+              这已经是数学上最「公平」的选号方式。
             </p>
             <p className="hint mt-1">
-              提示：无论选择哪种权重模式，单注中头奖的概率都是 1/21,425,712。加权只是让某些号码「更容易被随机到」，不是「更容易开出来」。
+              提示：无论选择哪种权重模式，单注中头奖的概率都是
+              1/21,425,712。加权只是让某些号码「更容易被随机到」，不是「更容易开出来」。
             </p>
           </div>
         )}
@@ -694,18 +731,25 @@ export default function GeneratorPanel({ draws }) {
           <h3 className="section-title">本页参数说明</h3>
           <ul className="mt-1 space-y-1 text-xs leading-relaxed text-slate-600">
             <li>
-              · 前区池「仅热号 / 仅冷号 / 遗漏最高」按所选历史数据的频次与当前遗漏排序取前 N 个；缩小号码池会降低组合覆盖率。
+              · 前区池「仅热号 / 仅冷号 / 遗漏最高」按所选历史数据的频次与当前遗漏排序取前 N
+              个；缩小号码池会降低组合覆盖率。
             </li>
-            <li>· 权重模式只改变抽样概率：按历史频率加权会让历史高频号更容易被抽到，但不会让它更容易开出。</li>
-            <li>· 约束条件会做最多 200 次重试；若号码池太小导致无法满足，会放宽为「仅去重」并在卡片上标注。</li>
+            <li>
+              ·
+              权重模式只改变抽样概率：按历史频率加权会让历史高频号更容易被抽到，但不会让它更容易开出。
+            </li>
+            <li>
+              · 约束条件会做最多 200
+              次重试；若号码池太小导致无法满足，会放宽为「仅去重」并在卡片上标注。
+            </li>
             <li>· 组与组之间保证不重复（前区 + 后区完全相同视为重复）。</li>
             <li>· 相同随机种子 + 相同参数 + 相同历史数据 ⇒ 完全相同的结果，便于核对与复现。</li>
           </ul>
         </div>
 
         <div className="rounded-lg border border-slate-200 bg-white p-3 text-[11px] leading-relaxed text-slate-500">
-          单注 2 元，头奖概率 1/21,425,712（约 0.0000047%）。以每天买 1 注计算，长期平均需要约 5.9 万年才可能命中一次头奖。
-          请理性购彩，量力而行；未成年人不得购彩或兑奖。
+          单注 2 元，头奖概率 1/21,425,712（约 0.0000047%）。以每天买 1 注计算，长期平均需要约 5.9
+          万年才可能命中一次头奖。 请理性购彩，量力而行；未成年人不得购彩或兑奖。
         </div>
       </div>
 

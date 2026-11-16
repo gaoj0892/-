@@ -29,7 +29,9 @@ function RankCard({ title, subtitle, items, zone, tone, drawsCount }) {
   const isFront = zone === 'front';
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-3">
-      <p className={`text-xs font-semibold ${tone === 'hot' ? 'text-red-600' : 'text-blue-600'}`}>{title}</p>
+      <p className={`text-xs font-semibold ${tone === 'hot' ? 'text-red-600' : 'text-blue-600'}`}>
+        {title}
+      </p>
       <p className="hint mt-0.5">{subtitle}</p>
       <ul className="mt-2 space-y-1">
         {items.map((item, index) => (
@@ -162,7 +164,8 @@ export default function HotColdPanel({ draws }) {
           <div>
             <h2 className="section-title">冷热与遗漏</h2>
             <p className="hint mt-1">
-              冷热榜基于 {scoped.length} 期数据；遗漏统计基于全部 {draws.length} 期（当前遗漏以最新一期为起点）。
+              冷热榜基于 {scoped.length} 期数据；遗漏统计基于全部 {draws.length}{' '}
+              期（当前遗漏以最新一期为起点）。
             </p>
           </div>
           <div className="flex flex-wrap gap-1">
@@ -222,7 +225,9 @@ export default function HotColdPanel({ draws }) {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="card card-pad min-w-0">
           <h3 className="section-title">前区遗漏 Top10</h3>
-          <p className="hint mb-1">遗漏值 = 从最新一期往前数，连续未开出的期数（最新一期开出则为 0）。</p>
+          <p className="hint mb-1">
+            遗漏值 = 从最新一期往前数，连续未开出的期数（最新一期开出则为 0）。
+          </p>
           <OmissionChart rows={frontOmission} />
         </div>
 
@@ -306,7 +311,8 @@ export default function HotColdPanel({ draws }) {
       </div>
 
       <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs leading-relaxed text-amber-900">
-        <strong>赌徒谬误提醒：</strong>遗漏值高不代表「该出了」。每一期开奖都是独立事件，上一期结果不会影响下一期。把遗漏当成「欠账」是一种常见的认知偏差，长期看不会提高任何号码的出现概率。
+        <strong>赌徒谬误提醒：</strong>
+        遗漏值高不代表「该出了」。每一期开奖都是独立事件，上一期结果不会影响下一期。把遗漏当成「欠账」是一种常见的认知偏差，长期看不会提高任何号码的出现概率。
       </div>
     </div>
   );

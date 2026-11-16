@@ -27,7 +27,12 @@ export function FrontBall({ n, size = 'md', muted = false, selected = false, onC
 
   if (onClick) {
     return (
-      <button type="button" className={classes} onClick={onClick} title={title || `前区 ${pad2(n)}`}>
+      <button
+        type="button"
+        className={classes}
+        onClick={onClick}
+        title={title || `前区 ${pad2(n)}`}
+      >
         {pad2(n)}
       </button>
     );
@@ -57,7 +62,12 @@ export function BackBall({ n, size = 'md', muted = false, selected = false, onCl
 
   if (onClick) {
     return (
-      <button type="button" className={classes} onClick={onClick} title={title || `后区 ${pad2(n)}`}>
+      <button
+        type="button"
+        className={classes}
+        onClick={onClick}
+        title={title || `后区 ${pad2(n)}`}
+      >
         {pad2(n)}
       </button>
     );

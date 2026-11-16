@@ -46,8 +46,8 @@ function deepEqual(a, b) {
   const aKeys = Object.keys(a);
   const bKeys = Object.keys(b);
   if (aKeys.length !== bKeys.length) return false;
-  return aKeys.every((key) =>
-    Object.prototype.hasOwnProperty.call(b, key) && deepEqual(a[key], b[key]),
+  return aKeys.every(
+    (key) => Object.prototype.hasOwnProperty.call(b, key) && deepEqual(a[key], b[key]),
   );
 }
 
@@ -106,5 +106,7 @@ const deltaPct = beforeBytes > 0 ? ((deltaBytes / beforeBytes) * 100).toFixed(2)
 
 console.log('✅ 种子数据整形完成，结构不变量校验通过（JSON.parse 后深度相等）');
 console.log(`   期数：${beforeData.draws.length}`);
-console.log(`   字节：${beforeBytes} → ${afterBytes}（${deltaBytes >= 0 ? '+' : ''}${deltaBytes}，${deltaPct}%）`);
+console.log(
+  `   字节：${beforeBytes} → ${afterBytes}（${deltaBytes >= 0 ? '+' : ''}${deltaBytes}，${deltaPct}%）`,
+);
 console.log(`   行数：${countLines(beforeText)} → ${countLines(afterText)}`);

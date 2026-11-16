@@ -11,12 +11,42 @@ const NOTE_OPTIONS = [1, 3, 5, 10];
 
 /** 可选策略：id / 展示名 / 覆盖的选号参数 */
 const STRATEGIES = [
-  { id: 'uniform', label: '等概率随机', params: {}, desc: '不参考任何历史统计，纯随机 —— 这是判断其他策略是否有用的基准。' },
-  { id: 'freq', label: '频率加权（追热号）', params: { frontWeightMode: 'freq' }, desc: '历史出现次数越多的号码权重越高。' },
-  { id: 'omission', label: '遗漏加权（追冷号）', params: { frontWeightMode: 'omission' }, desc: '当前遗漏期数越长的号码权重越高。' },
-  { id: 'mix', label: '冷热混合（各 50%）', params: { frontWeightMode: 'mix' }, desc: '频率权重与遗漏权重各占一半。' },
-  { id: 'hot', label: '仅热号池 Top12', params: { frontPoolMode: 'hot', frontPoolSize: 12 }, desc: '只从历史最热的 12 个前区号码里选。' },
-  { id: 'cold', label: '仅冷号池 Bottom12', params: { frontPoolMode: 'cold', frontPoolSize: 12 }, desc: '只从历史最冷的 12 个前区号码里选。' },
+  {
+    id: 'uniform',
+    label: '等概率随机',
+    params: {},
+    desc: '不参考任何历史统计，纯随机 —— 这是判断其他策略是否有用的基准。',
+  },
+  {
+    id: 'freq',
+    label: '频率加权（追热号）',
+    params: { frontWeightMode: 'freq' },
+    desc: '历史出现次数越多的号码权重越高。',
+  },
+  {
+    id: 'omission',
+    label: '遗漏加权（追冷号）',
+    params: { frontWeightMode: 'omission' },
+    desc: '当前遗漏期数越长的号码权重越高。',
+  },
+  {
+    id: 'mix',
+    label: '冷热混合（各 50%）',
+    params: { frontWeightMode: 'mix' },
+    desc: '频率权重与遗漏权重各占一半。',
+  },
+  {
+    id: 'hot',
+    label: '仅热号池 Top12',
+    params: { frontPoolMode: 'hot', frontPoolSize: 12 },
+    desc: '只从历史最热的 12 个前区号码里选。',
+  },
+  {
+    id: 'cold',
+    label: '仅冷号池 Bottom12',
+    params: { frontPoolMode: 'cold', frontPoolSize: 12 },
+    desc: '只从历史最冷的 12 个前区号码里选。',
+  },
 ];
 
 /** 前区命中理论均值 5 × 5/35 */
@@ -193,25 +223,49 @@ export default function BacktestPanel({ draws }) {
    */
   const handleExport = () => {
     if (!result) return;
-    const head = ['期号', '开奖日期', '前区1', '前区2', '前区3', '前区4', '前区5', '后区1', '后区2', '最佳注前区', '最佳注后区', '前区命中', '后区命中', '奖级', '当期固定奖', '累计投入', '累计回收'];
+    const head = [
+      '期号',
+      '开奖日期',
+      '前区1',
+      '前区2',
+      '前区3',
+      '前区4',
+      '前区5',
+      '后区1',
+      '后区2',
+      '最佳注前区',
+      '最佳注后区',
+      '前区命中',
+      '后区命中',
+      '奖级',
+      '当期固定奖',
+      '累计投入',
+      '累计回收',
+    ];
     const lines = [head.join(',')];
     result.rows.forEach((row) => {
-      lines.push([
-        row.no,
-        row.date,
-        ...row.actual.front.map(pad2),
-        ...row.actual.back.map(pad2),
-        row.bestNote ? row.bestNote.front.map(pad2).join(' ') : '',
-        row.bestNote ? row.bestNote.back.map(pad2).join(' ') : '',
-        row.bestFrontHits,
-        row.bestBackHits,
-        row.bestLevelName || '未中奖',
-        row.prize,
-        row.cumCost,
-        row.cumPrize,
-      ].join(','));
+      lines.push(
+        [
+          row.no,
+          row.date,
+          ...row.actual.front.map(pad2),
+          ...row.actual.back.map(pad2),
+          row.bestNote ? row.bestNote.front.map(pad2).join(' ') : '',
+          row.bestNote ? row.bestNote.back.map(pad2).join(' ') : '',
+          row.bestFrontHits,
+          row.bestBackHits,
+          row.bestLevelName || '未中奖',
+          row.prize,
+          row.cumCost,
+          row.cumPrize,
+        ].join(','),
+      );
     });
-    downloadText(`回测明细_${todayStamp()}.csv`, `\uFEFF${lines.join('\r\n')}`, 'text/csv;charset=utf-8');
+    downloadText(
+      `回测明细_${todayStamp()}.csv`,
+      `\uFEFF${lines.join('\r\n')}`,
+      'text/csv;charset=utf-8',
+    );
   };
 
   if (!draws || draws.length < 2) return <EmptyHint />;
@@ -223,12 +277,14 @@ export default function BacktestPanel({ draws }) {
       <section className="card card-pad">
         <h2 className="section-title">多期批量回测</h2>
         <p className="hint mt-1">
-          用滚动窗口逐期检验「如果按某个策略买，历史上会中多少」：回测第 i 期时只使用第 i 期之前的数据选号，
+          用滚动窗口逐期检验「如果按某个策略买，历史上会中多少」：回测第 i 期时只使用第 i
+          期之前的数据选号，
           目标期的号码不参与选号（不存在未来函数）。每期注数、期数、种子都可固定复现。
         </p>
         <div className="mt-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2">
           <p className="text-xs leading-relaxed text-amber-900">
-            回测只回答「过去会怎样」，<strong>不能预测下一期</strong>。彩票每期独立随机，任何策略的历史成绩都不代表未来；
+            回测只回答「过去会怎样」，<strong>不能预测下一期</strong>
+            。彩票每期独立随机，任何策略的历史成绩都不代表未来；
             若回测显示某策略优于随机，几乎都来自样本内挑选或随机波动。
           </p>
         </div>
@@ -236,34 +292,57 @@ export default function BacktestPanel({ draws }) {
         <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <label className="block">
             <span className="label">回测期数</span>
-            <select className="input w-full" value={periods} onChange={(event) => setPeriods(Number(event.target.value))}>
+            <select
+              className="input w-full"
+              value={periods}
+              onChange={(event) => setPeriods(Number(event.target.value))}
+            >
               {PERIOD_OPTIONS.map((value) => (
-                <option key={value} value={value}>最近 {value} 期</option>
+                <option key={value} value={value}>
+                  最近 {value} 期
+                </option>
               ))}
             </select>
           </label>
 
           <label className="block">
             <span className="label">每期注数</span>
-            <select className="input w-full" value={notes} onChange={(event) => setNotes(Number(event.target.value))}>
+            <select
+              className="input w-full"
+              value={notes}
+              onChange={(event) => setNotes(Number(event.target.value))}
+            >
               {NOTE_OPTIONS.map((value) => (
-                <option key={value} value={value}>{value} 注（{value * TICKET_PRICE} 元/期）</option>
+                <option key={value} value={value}>
+                  {value} 注（{value * TICKET_PRICE} 元/期）
+                </option>
               ))}
             </select>
           </label>
 
           <label className="block">
             <span className="label">选号策略</span>
-            <select className="input w-full" value={strategyId} onChange={(event) => setStrategyId(event.target.value)}>
+            <select
+              className="input w-full"
+              value={strategyId}
+              onChange={(event) => setStrategyId(event.target.value)}
+            >
               {STRATEGIES.map((item) => (
-                <option key={item.id} value={item.id}>{item.label}</option>
+                <option key={item.id} value={item.id}>
+                  {item.label}
+                </option>
               ))}
             </select>
           </label>
 
           <label className="block">
             <span className="label">随机种子（同种子可复现）</span>
-            <input className="input w-full" value={seed} onChange={(event) => setSeed(event.target.value)} placeholder="留空则随机" />
+            <input
+              className="input w-full"
+              value={seed}
+              onChange={(event) => setSeed(event.target.value)}
+              placeholder="留空则随机"
+            />
           </label>
         </div>
 
@@ -290,7 +369,9 @@ export default function BacktestPanel({ draws }) {
             </button>
           ) : null}
           {result ? (
-            <span className="chip">种子 {result.seed} · 耗时 {result.elapsedMs} ms</span>
+            <span className="chip">
+              种子 {result.seed} · 耗时 {result.elapsedMs} ms
+            </span>
           ) : null}
           {error ? <span className="text-xs text-red-600">{error}</span> : null}
         </div>
@@ -298,7 +379,10 @@ export default function BacktestPanel({ draws }) {
 
       {!result ? (
         <section className="card card-pad">
-          <p className="text-sm text-slate-600">设置好参数后点击「开始回测」。建议先用默认的「频率加权 + 最近 100 期」跑一次，再与「等概率随机」对比。</p>
+          <p className="text-sm text-slate-600">
+            设置好参数后点击「开始回测」。建议先用默认的「频率加权 + 最近 100
+            期」跑一次，再与「等概率随机」对比。
+          </p>
         </section>
       ) : (
         <>
@@ -306,16 +390,30 @@ export default function BacktestPanel({ draws }) {
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <h2 className="section-title">回测汇总</h2>
               <p className="hint">
-                {result.rows[0].no} ~ {result.rows[result.rows.length - 1].no} · 共 {result.periods} 期 ·
-                每期 {result.notesPerDraw} 注 · 策略「{strategy.label}」
+                {result.rows[0].no} ~ {result.rows[result.rows.length - 1].no} · 共 {result.periods}{' '}
+                期 · 每期 {result.notesPerDraw} 注 · 策略「{strategy.label}」
               </p>
             </div>
 
             <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
-              <Metric label="总注数" value={`${result.totalNotes} 注`} sub={`${result.periods} 期 × ${result.notesPerDraw} 注`} />
+              <Metric
+                label="总注数"
+                value={`${result.totalNotes} 注`}
+                sub={`${result.periods} 期 × ${result.notesPerDraw} 注`}
+              />
               <Metric label="总投入" value={`¥${result.cost}`} sub={`每注 ${TICKET_PRICE} 元`} />
-              <Metric label="固定奖回收" value={`¥${result.fixedPrize}`} sub="不含一、二等奖（浮动）" tone={result.fixedPrize > 0 ? 'good' : 'default'} />
-              <Metric label="固定奖回收率" value={formatPercent(result.roi)} sub="回收 ÷ 投入" tone={result.roi >= 0.5 ? 'default' : 'bad'} />
+              <Metric
+                label="固定奖回收"
+                value={`¥${result.fixedPrize}`}
+                sub="不含一、二等奖（浮动）"
+                tone={result.fixedPrize > 0 ? 'good' : 'default'}
+              />
+              <Metric
+                label="固定奖回收率"
+                value={formatPercent(result.roi)}
+                sub="回收 ÷ 投入"
+                tone={result.roi >= 0.5 ? 'default' : 'bad'}
+              />
               <Metric
                 label="前区平均命中"
                 value={formatNumber(result.avgFrontHits)}
@@ -329,8 +427,9 @@ export default function BacktestPanel({ draws }) {
             </div>
 
             <p className="hint mt-3">
-              中奖注数（九等奖及以上）共 <strong className="text-slate-700">{result.winNotes}</strong> 注，
-              占 {formatPercent(result.totalNotes ? result.winNotes / result.totalNotes : 0)}。
+              中奖注数（九等奖及以上）共{' '}
+              <strong className="text-slate-700">{result.winNotes}</strong> 注， 占{' '}
+              {formatPercent(result.totalNotes ? result.winNotes / result.totalNotes : 0)}。
               返奖率固定约 51%，长期回收率必然低于投入——这是规则决定的，不是选号技术能扭转的。
             </p>
           </section>
@@ -363,7 +462,9 @@ export default function BacktestPanel({ draws }) {
                   <tr>
                     <td>中奖注数</td>
                     <td className="font-medium">{result.winNotes}</td>
-                    <td>{result.baseline.winNotes}（{result.baseline.runs} 轮合计）</td>
+                    <td>
+                      {result.baseline.winNotes}（{result.baseline.runs} 轮合计）
+                    </td>
                     <td>—</td>
                   </tr>
                   <tr>
@@ -376,9 +477,12 @@ export default function BacktestPanel({ draws }) {
               </table>
             </div>
             <div className="mt-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-              <p className="text-xs leading-relaxed text-slate-700">{result.comparison.conclusion}</p>
+              <p className="text-xs leading-relaxed text-slate-700">
+                {result.comparison.conclusion}
+              </p>
               <p className="hint mt-1">
-                检验口径：两样本 z 检验（策略 {result.totalNotes} 注 vs 基准 {result.baseline.totalNotes} 注，α=0.05）。
+                检验口径：两样本 z 检验（策略 {result.totalNotes} 注 vs 基准{' '}
+                {result.baseline.totalNotes} 注，α=0.05）。
                 注数越多，越容易检出微小差异——但差异再显著，也不足以改变 1/21,425,712 的量级。
               </p>
             </div>
@@ -388,12 +492,16 @@ export default function BacktestPanel({ draws }) {
             <div className="card card-pad min-w-0">
               <h2 className="section-title">累计投入 vs 累计回收</h2>
               <Chart option={lossOption} height={280} ariaLabel="累计投入与累计回收折线图" />
-              <p className="hint mt-1">两线开口随时间单调扩大，就是负期望的直观表现：买得越久，固定奖回收越追不上投入。</p>
+              <p className="hint mt-1">
+                两线开口随时间单调扩大，就是负期望的直观表现：买得越久，固定奖回收越追不上投入。
+              </p>
             </div>
             <div className="card card-pad min-w-0">
               <h2 className="section-title">各奖级命中注数</h2>
               <Chart option={levelOption} height={280} ariaLabel="各奖级命中注数柱状图" />
-              <p className="hint mt-1">一、二等奖为浮动奖金，这里只统计注数、不计金额；九等奖门槛最低（如 0+2），出现最多。</p>
+              <p className="hint mt-1">
+                一、二等奖为浮动奖金，这里只统计注数、不计金额；九等奖门槛最低（如 0+2），出现最多。
+              </p>
             </div>
           </section>
 
@@ -425,17 +533,30 @@ export default function BacktestPanel({ draws }) {
                         <BallGroup front={row.actual.front} back={row.actual.back} size="xs" />
                       </td>
                       <td>
-                        {row.bestNote ? <BallGroup front={row.bestNote.front} back={row.bestNote.back} size="xs" /> : '—'}
+                        {row.bestNote ? (
+                          <BallGroup
+                            front={row.bestNote.front}
+                            back={row.bestNote.back}
+                            size="xs"
+                          />
+                        ) : (
+                          '—'
+                        )}
                       </td>
                       <td>
                         {row.bestFrontHits}+{row.bestBackHits}
                       </td>
-                      <td className={row.bestLevel ? 'font-medium text-emerald-600' : 'text-slate-400'}>
+                      <td
+                        className={
+                          row.bestLevel ? 'font-medium text-emerald-600' : 'text-slate-400'
+                        }
+                      >
                         {row.bestLevelName || '未中奖'}
                       </td>
                       <td>¥{row.prize}</td>
                       <td className={row.profit < 0 ? 'text-red-600' : 'text-emerald-600'}>
-                        {row.profit > 0 ? '+' : ''}{row.profit}
+                        {row.profit > 0 ? '+' : ''}
+                        {row.profit}
                       </td>
                     </tr>
                   ))}
@@ -443,7 +564,8 @@ export default function BacktestPanel({ draws }) {
               </table>
             </div>
             <p className="hint mt-2">
-              明细共 {result.rows.length} 期，表格仅展示最近 30 期；完整数据可用上方「导出明细 CSV」下载。
+              明细共 {result.rows.length} 期，表格仅展示最近 30 期；完整数据可用上方「导出明细
+              CSV」下载。
             </p>
           </section>
         </>

@@ -145,7 +145,17 @@ function meanSd(sum, sqSum, n) {
 export function runUniformBaseline(draws, startIndex, notesPerDraw, runs, seed) {
   const totalNotes = Math.max(0, (draws.length - startIndex) * notesPerDraw);
   if (!runs || totalNotes === 0) {
-    return { runs: 0, totalNotes: 0, avgFrontHits: 0, avgBackHits: 0, winNotes: 0, cost: 0, prize: 0, roi: 0, perRunFront: [] };
+    return {
+      runs: 0,
+      totalNotes: 0,
+      avgFrontHits: 0,
+      avgBackHits: 0,
+      winNotes: 0,
+      cost: 0,
+      prize: 0,
+      roi: 0,
+      perRunFront: [],
+    };
   }
 
   const perRunFront = [];
@@ -226,7 +236,17 @@ export function runBacktest(params, options = {}) {
     winNotes: 0,
     levelCounts: PRIZE_LEVELS.map((item) => ({ ...item, count: 0, amount: 0 })),
     rows: [],
-    baseline: { runs: 0, totalNotes: 0, avgFrontHits: 0, avgBackHits: 0, winNotes: 0, cost: 0, prize: 0, roi: 0, perRunFront: [] },
+    baseline: {
+      runs: 0,
+      totalNotes: 0,
+      avgFrontHits: 0,
+      avgBackHits: 0,
+      winNotes: 0,
+      cost: 0,
+      prize: 0,
+      roi: 0,
+      perRunFront: [],
+    },
     comparison: { zFront: 0, pFront: 1, zBack: 0, pBack: 1, significant: false, conclusion: '' },
     seed: normalizeSeed(options.seed === undefined ? 'dlt-backtest' : options.seed),
     elapsedMs: 0,
@@ -267,10 +287,7 @@ export function runBacktest(params, options = {}) {
     const history = draws.slice(0, i);
     const drawSeed = hashSeed(`${base.seed}:${draw.no}`);
 
-    const generated = generateNumbers(
-      { ...params, draws: history, count: notesPerDraw },
-      drawSeed,
-    );
+    const generated = generateNumbers({ ...params, draws: history, count: notesPerDraw }, drawSeed);
 
     let drawPrize = 0;
     let best = { level: 0, frontHits: 0, backHits: 0, note: null };
@@ -325,7 +342,9 @@ export function runBacktest(params, options = {}) {
   }
 
   if (seedBudgetShort > 0) {
-    warnings.push(`有 ${seedBudgetShort} 期未能按设定注数生成足量号码（号码池容量不足），这些期按实际注数计入。`);
+    warnings.push(
+      `有 ${seedBudgetShort} 期未能按设定注数生成足量号码（号码池容量不足），这些期按实际注数计入。`,
+    );
   }
 
   const front = meanSd(frontSum, frontSqSum, totalNotes);
@@ -343,13 +362,18 @@ export function runBacktest(params, options = {}) {
     // 再折算为单注口径（除以 sqrt(每期注数)）与策略单注标准误合并。
     const perRun = baseline.perRunFront;
     const runMean = perRun.length ? perRun.reduce((a, b) => a + b, 0) / perRun.length : 0;
-    const runVar = perRun.length > 1
-      ? perRun.reduce((a, b) => a + (b - runMean) * (b - runMean), 0) / (perRun.length - 1)
+    const runVar =
+      perRun.length > 1
+        ? perRun.reduce((a, b) => a + (b - runMean) * (b - runMean), 0) / (perRun.length - 1)
+        : 0;
+    const baselineNoteSe = perRun.length
+      ? Math.sqrt(runVar / perRun.length) / Math.sqrt(notesPerDraw)
       : 0;
-    const baselineNoteSe = perRun.length ? Math.sqrt(runVar / perRun.length) / Math.sqrt(notesPerDraw) : 0;
-    const zFront = baselineNoteSe + seFront > 0
-      ? (front.mean - baseline.avgFrontHits) / Math.sqrt(seFront * seFront + baselineNoteSe * baselineNoteSe)
-      : 0;
+    const zFront =
+      baselineNoteSe + seFront > 0
+        ? (front.mean - baseline.avgFrontHits) /
+          Math.sqrt(seFront * seFront + baselineNoteSe * baselineNoteSe)
+        : 0;
 
     // 后区命中均值固定为 2*2/12=0.333，用策略侧单注标准误做单样本检验即可
     const expectedBack = (2 * 2) / 12;

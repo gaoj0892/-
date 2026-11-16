@@ -18,7 +18,7 @@ function makeDraws(n) {
   for (let i = 1; i <= n; i += 1) {
     const offset = (i - 1) * 3;
     const front = [0, 1, 2, 3, 4].map((k) => ((offset + k * 2) % 35) + 1);
-    const back = [((i - 1) % 12) + 1, (((i - 1) % 12) + 7) % 12 + 1];
+    const back = [((i - 1) % 12) + 1, ((((i - 1) % 12) + 7) % 12) + 1];
     // 日期必须单调递增：sortByPeriodAsc 先按 date 排序，日期乱序会把数组顺序打乱
     const day = new Date(Date.UTC(2020, 0, 1) + i * 86400000).toISOString().slice(0, 10);
     draws.push({
@@ -69,7 +69,10 @@ describe('matchLevel 奖级判定', () => {
 
 describe('countHits 命中计算', () => {
   it('逐个数正确', () => {
-    const hit = countHits({ front: [1, 2, 3, 4, 5], back: [1, 2] }, { front: [1, 2, 3, 10, 11], back: [1, 5] });
+    const hit = countHits(
+      { front: [1, 2, 3, 4, 5], back: [1, 2] },
+      { front: [1, 2, 3, 10, 11], back: [1, 5] },
+    );
     expect(hit.frontHits).toBe(3);
     expect(hit.backHits).toBe(1);
     expect(hit.level).toBe(8);
@@ -77,7 +80,10 @@ describe('countHits 命中计算', () => {
   });
 
   it('全中为一等奖且浮动奖金不计金额', () => {
-    const hit = countHits({ front: [1, 2, 3, 4, 5], back: [1, 2] }, { front: [1, 2, 3, 4, 5], back: [1, 2] });
+    const hit = countHits(
+      { front: [1, 2, 3, 4, 5], back: [1, 2] },
+      { front: [1, 2, 3, 4, 5], back: [1, 2] },
+    );
     expect(hit.level).toBe(1);
     expect(hit.prize).toBe(0);
   });
@@ -106,7 +112,10 @@ describe('runBacktest 回测主流程', () => {
   const draws = makeDraws(30);
 
   it('回测期数、注数、成本计算正确', () => {
-    const result = runBacktest({ ...BASE_PARAMS, draws }, { periods: 10, notes: 3, seed: 'unit', baselineRuns: 2 });
+    const result = runBacktest(
+      { ...BASE_PARAMS, draws },
+      { periods: 10, notes: 3, seed: 'unit', baselineRuns: 2 },
+    );
     expect(result.periods).toBe(10);
     expect(result.notesPerDraw).toBe(3);
     expect(result.rows).toHaveLength(10);
@@ -116,19 +125,34 @@ describe('runBacktest 回测主流程', () => {
   });
 
   it('无未来函数：首个回测期从 data.length - periods 开始，且只使用此前数据', () => {
-    const result = runBacktest({ ...BASE_PARAMS, draws }, { periods: 10, notes: 2, seed: 'no-lookahead', baselineRuns: 0 });
+    const result = runBacktest(
+      { ...BASE_PARAMS, draws },
+      { periods: 10, notes: 2, seed: 'no-lookahead', baselineRuns: 0 },
+    );
     expect(result.rows[0].no).toBe(draws[20].no);
     expect(result.rows[9].no).toBe(draws[29].no);
     // 同一期内，使用不同历史窗口会得到不同号码，说明历史切片确实参与了选号
-    const withFull = runBacktest({ ...BASE_PARAMS, draws }, { periods: 1, notes: 1, seed: 'x', baselineRuns: 0 });
+    const withFull = runBacktest(
+      { ...BASE_PARAMS, draws },
+      { periods: 1, notes: 1, seed: 'x', baselineRuns: 0 },
+    );
     expect(withFull.rows).toHaveLength(1);
     expect(withFull.rows[0].no).toBe(draws[29].no);
   });
 
   it('同种子可复现，不同种子结果不同', () => {
-    const a = runBacktest({ ...BASE_PARAMS, draws }, { periods: 8, notes: 3, seed: 'same', baselineRuns: 0 });
-    const b = runBacktest({ ...BASE_PARAMS, draws }, { periods: 8, notes: 3, seed: 'same', baselineRuns: 0 });
-    const c = runBacktest({ ...BASE_PARAMS, draws }, { periods: 8, notes: 3, seed: 'other', baselineRuns: 0 });
+    const a = runBacktest(
+      { ...BASE_PARAMS, draws },
+      { periods: 8, notes: 3, seed: 'same', baselineRuns: 0 },
+    );
+    const b = runBacktest(
+      { ...BASE_PARAMS, draws },
+      { periods: 8, notes: 3, seed: 'same', baselineRuns: 0 },
+    );
+    const c = runBacktest(
+      { ...BASE_PARAMS, draws },
+      { periods: 8, notes: 3, seed: 'other', baselineRuns: 0 },
+    );
     const keyOf = (r) => r.rows.map((row) => row.bestNote.front.join(',')).join('|');
     expect(keyOf(a)).toBe(keyOf(b));
     expect(keyOf(a)).not.toBe(keyOf(c));
@@ -136,7 +160,10 @@ describe('runBacktest 回测主流程', () => {
   });
 
   it('累计成本与累计奖金单调，末项等于汇总值', () => {
-    const result = runBacktest({ ...BASE_PARAMS, draws }, { periods: 6, notes: 2, seed: 'cum', baselineRuns: 0 });
+    const result = runBacktest(
+      { ...BASE_PARAMS, draws },
+      { periods: 6, notes: 2, seed: 'cum', baselineRuns: 0 },
+    );
     let prevCost = 0;
     result.rows.forEach((row) => {
       expect(row.cumCost).toBeGreaterThan(prevCost);
@@ -148,7 +175,10 @@ describe('runBacktest 回测主流程', () => {
   });
 
   it('奖级统计与明细一致', () => {
-    const result = runBacktest({ ...BASE_PARAMS, draws }, { periods: 6, notes: 5, seed: 'levels', baselineRuns: 0 });
+    const result = runBacktest(
+      { ...BASE_PARAMS, draws },
+      { periods: 6, notes: 5, seed: 'levels', baselineRuns: 0 },
+    );
     const countSum = result.levelCounts.reduce((sum, item) => sum + item.count, 0);
     expect(countSum).toBe(result.winNotes);
     const amountSum = result.levelCounts.reduce((sum, item) => sum + item.amount, 0);
@@ -156,7 +186,10 @@ describe('runBacktest 回测主流程', () => {
   });
 
   it('期数超界会被夹取，注数超界会被夹取', () => {
-    const result = runBacktest({ ...BASE_PARAMS, draws }, { periods: 999, notes: 99, seed: 'clamp', baselineRuns: 0 });
+    const result = runBacktest(
+      { ...BASE_PARAMS, draws },
+      { periods: 999, notes: 99, seed: 'clamp', baselineRuns: 0 },
+    );
     expect(result.periods).toBe(29);
     expect(result.notesPerDraw).toBe(10);
     expect(result.rows).toHaveLength(29);
@@ -184,7 +217,10 @@ describe('runBacktest 回测主流程', () => {
   });
 
   it('对比结论字段完整且 p 值在 [0,1]', () => {
-    const result = runBacktest({ ...BASE_PARAMS, draws }, { periods: 10, notes: 3, seed: 'cmp', baselineRuns: 5 });
+    const result = runBacktest(
+      { ...BASE_PARAMS, draws },
+      { periods: 10, notes: 3, seed: 'cmp', baselineRuns: 5 },
+    );
     expect(result.comparison.pFront).toBeGreaterThanOrEqual(0);
     expect(result.comparison.pFront).toBeLessThanOrEqual(1);
     expect(typeof result.comparison.conclusion).toBe('string');

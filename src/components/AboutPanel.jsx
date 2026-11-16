@@ -27,14 +27,19 @@ export default function AboutPanel({ meta, drawsCount }) {
       <div className="card card-pad">
         <h2 className="section-title">数据来源</h2>
         <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-slate-700">
-          <li>· 来源：中国体彩网官方开奖数据接口 webapi.sporttery.cn（gameNo = 85，即超级大乐透）。</li>
+          <li>
+            · 来源：中国体彩网官方开奖数据接口 webapi.sporttery.cn（gameNo = 85，即超级大乐透）。
+          </li>
           <li>
             · 内置种子：{drawsCount} 期，期号 {firstNo} ~ {lastNo}，日期 {firstDate} ~ {lastDate}。
           </li>
           <li>· 数据仅用于本地统计演示；本工具不联网、不提交任何数据、不提供投注功能。</li>
-          <li>· 若官方已开奖而本地数据未更新，可通过「历史数据」页导入最新数据（txt / csv / json）。</li>
           <li>
-            · 说明：内置数据经卡方检验显示与均匀分布存在统计偏离（前区 χ² ≈ 89.4，df = 34）。这既可能源于历史规则变化，
+            · 若官方已开奖而本地数据未更新，可通过「历史数据」页导入最新数据（txt / csv / json）。
+          </li>
+          <li>
+            · 说明：内置数据经卡方检验显示与均匀分布存在统计偏离（前区 χ² ≈ 89.4，df =
+            34）。这既可能源于历史规则变化，
             也可能源于数据合成/录入偏差；它同样不能用于预测下期结果，请勿据此购彩。
           </li>
         </ul>
@@ -46,8 +51,9 @@ export default function AboutPanel({ meta, drawsCount }) {
           <div>
             <p className="font-medium text-slate-800">1. 频率与冷热</p>
             <p className="mt-0.5 text-slate-600">
-              频率统计描述的是历史记录。因为每期独立随机，号码的长期出现率会趋近理论概率（前区 14.29%），但短期内没有任何机制让「冷号」回补。
-              卡方检验出现 p &lt; 0.05 时，多半来自多重比较和样本波动，不能作为选号依据。
+              频率统计描述的是历史记录。因为每期独立随机，号码的长期出现率会趋近理论概率（前区
+              14.29%），但短期内没有任何机制让「冷号」回补。 卡方检验出现 p &lt; 0.05
+              时，多半来自多重比较和样本波动，不能作为选号依据。
             </p>
           </div>
           <div>
@@ -78,7 +84,8 @@ export default function AboutPanel({ meta, drawsCount }) {
           <div>
             <p className="font-medium text-slate-800">5. 期望值</p>
             <p className="mt-0.5 text-slate-600">
-              彩票的返奖率低于 100%，长期购买的期望收益为负。购买彩票应当被视为娱乐消费，而不是投资。
+              彩票的返奖率低于
+              100%，长期购买的期望收益为负。购买彩票应当被视为娱乐消费，而不是投资。
             </p>
           </div>
         </div>
@@ -98,11 +105,12 @@ export default function AboutPanel({ meta, drawsCount }) {
           </p>
           <p>
             请通过中国体育彩票官方渠道（实体投注站或官方授权渠道）购买彩票。请理性购彩、量力而行、切勿沉迷；
-            <strong>未成年人不得购买彩票或兑奖</strong>。若您或家人出现无法控制的购彩行为，请及时寻求帮助。
+            <strong>未成年人不得购买彩票或兑奖</strong>
+            。若您或家人出现无法控制的购彩行为，请及时寻求帮助。
           </p>
           <p>
-            数据来源：中国体彩网官方开奖数据接口（webapi.sporttery.cn，gameNo = 85）。若数据存在遗漏或错误，
-            以官方公布的开奖结果为准。
+            数据来源：中国体彩网官方开奖数据接口（webapi.sporttery.cn，gameNo =
+            85）。若数据存在遗漏或错误， 以官方公布的开奖结果为准。
           </p>
         </div>
       </div>
@@ -110,9 +118,15 @@ export default function AboutPanel({ meta, drawsCount }) {
       <div className="card card-pad">
         <h2 className="section-title">隐私与技术说明</h2>
         <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-slate-700">
-          <li>· 所有数据保存在你的浏览器 localStorage（key：dlt_predictor_draws_v1），不上传任何服务器。</li>
+          <li>
+            · 所有数据保存在你的浏览器
+            localStorage（key：dlt_predictor_draws_v1），不上传任何服务器。
+          </li>
           <li>· 本工具为纯前端单页应用，构建后可离线通过 file:// 打开使用。</li>
-          <li>· 选号使用 mulberry32 伪随机数生成器：相同随机种子 + 相同参数 ⇒ 完全相同的结果，便于核对与复现。</li>
+          <li>
+            · 选号使用 mulberry32 伪随机数生成器：相同随机种子 + 相同参数 ⇒
+            完全相同的结果，便于核对与复现。
+          </li>
           <li>· 统计计算（含卡方检验 p 值）均为自实现，不依赖第三方统计库。</li>
         </ul>
       </div>

@@ -83,7 +83,9 @@ describe('B. 种子数据完整性（与 Python 独立核对结果对齐）', ()
     const bad = [];
     SEED_DRAWS.forEach((d) => {
       const frontOk =
-        d.front.length === 5 && new Set(d.front).size === 5 && d.front.every((n) => n >= 1 && n <= 35);
+        d.front.length === 5 &&
+        new Set(d.front).size === 5 &&
+        d.front.every((n) => n >= 1 && n <= 35);
       const backOk =
         d.back.length === 2 && new Set(d.back).size === 2 && d.back.every((n) => n >= 1 && n <= 12);
       const dateOk = isRealDate(...d.date.split('-').map(Number));
@@ -104,11 +106,12 @@ describe('B. 种子数据完整性（与 Python 独立核对结果对齐）', ()
     expect(frontChi.df).toBe(34);
     expect(frontChi.chi2).toBeCloseTo(89.35, 1);
 
-    const sumMean =
-      sumSeries(SEED_DRAWS).reduce((acc, s) => acc + s.sum, 0) / SEED_DRAWS.length;
+    const sumMean = sumSeries(SEED_DRAWS).reduce((acc, s) => acc + s.sum, 0) / SEED_DRAWS.length;
     expect(sumMean).toBeCloseTo(91.71, 1);
 
-    const consecutivePeriods = SEED_DRAWS.filter((d) => consecutiveInfo(d.front).hasConsecutive).length;
+    const consecutivePeriods = SEED_DRAWS.filter(
+      (d) => consecutiveInfo(d.front).hasConsecutive,
+    ).length;
     expect((consecutivePeriods / SEED_DRAWS.length) * 100).toBeCloseTo(49.74, 1);
 
     const backChi = chiSquareTest(SEED_DRAWS, 'back');
@@ -238,7 +241,9 @@ describe('C-5. parse：分隔符 / 表头 / 错误隔离 / 前导零 / 去重', 
   });
 
   it('drawsToCsv 保留表头与两位补零', () => {
-    const csv = drawsToCsv([{ no: '07001', date: '2007-05-30', front: [1, 2, 3, 4, 35], back: [4, 11] }]);
+    const csv = drawsToCsv([
+      { no: '07001', date: '2007-05-30', front: [1, 2, 3, 4, 35], back: [4, 11] },
+    ]);
     const rows = csv.split('\n');
     expect(rows).toHaveLength(2);
     expect(rows[0]).toContain('期号');
@@ -298,7 +303,9 @@ describe('C-6. stats：手工小样本逐值断言', () => {
       expect(value).toBeLessThanOrEqual(1);
     });
     for (let i = 1; i < ps.length; i += 1) {
-      expect(ps[i], `x=${xs[i]} p=${ps[i]} 应小于 x=${xs[i - 1]} p=${ps[i - 1]}`).toBeLessThan(ps[i - 1]);
+      expect(ps[i], `x=${xs[i]} p=${ps[i]} 应小于 x=${xs[i - 1]} p=${ps[i - 1]}`).toBeLessThan(
+        ps[i - 1],
+      );
     }
 
     expect(chiSquarePValue(0, 34)).toBe(1);
@@ -421,7 +428,10 @@ describe('C-7. generator：可复现性 / 合法性 / 约束压力 / 权重', ()
   it('排除号绝不出现（前区排除 5 个数、后区排除 2 个数）', () => {
     const excludeFront = [1, 2, 3, 4, 5];
     const excludeBack = [12, 11];
-    const { groups } = generateNumbers({ ...baseParams, count: 20, excludeFront, excludeBack }, 2024);
+    const { groups } = generateNumbers(
+      { ...baseParams, count: 20, excludeFront, excludeBack },
+      2024,
+    );
     expect(groups).toHaveLength(20);
     groups.forEach((g) => {
       excludeFront.forEach((n) => expect(g.front).not.toContain(n));
@@ -533,20 +543,59 @@ describe('C-7. generator：可复现性 / 合法性 / 约束压力 / 权重', ()
     const group = { front: [1, 2, 3, 10, 11], back: [1, 2], sum: 27 };
     expect(constraintsSatisfied(group, { enabled: false })).toBe(true);
     expect(
-      constraintsSatisfied(group, { enabled: true, allowConsecutive: false, oddEven: false, bigSmall: false, sumRange: false }),
+      constraintsSatisfied(group, {
+        enabled: true,
+        allowConsecutive: false,
+        oddEven: false,
+        bigSmall: false,
+        sumRange: false,
+      }),
     ).toBe(false);
     expect(
-      constraintsSatisfied(group, { enabled: true, allowConsecutive: true, oddEven: false, bigSmall: false, sumRange: false }),
+      constraintsSatisfied(group, {
+        enabled: true,
+        allowConsecutive: true,
+        oddEven: false,
+        bigSmall: false,
+        sumRange: false,
+      }),
     ).toBe(true);
     expect(
-      constraintsSatisfied(group, { enabled: true, allowConsecutive: true, oddEven: false, bigSmall: false, sumRange: true, sumMin: 100, sumMax: 110 }),
+      constraintsSatisfied(group, {
+        enabled: true,
+        allowConsecutive: true,
+        oddEven: false,
+        bigSmall: false,
+        sumRange: true,
+        sumMin: 100,
+        sumMax: 110,
+      }),
     ).toBe(false);
     // sumMin > sumMax 时应自动交换上下界，而不是恒假
     expect(
-      constraintsSatisfied(group, { enabled: true, allowConsecutive: true, oddEven: false, bigSmall: false, sumRange: true, sumMin: 110, sumMax: 100 }),
+      constraintsSatisfied(group, {
+        enabled: true,
+        allowConsecutive: true,
+        oddEven: false,
+        bigSmall: false,
+        sumRange: true,
+        sumMin: 110,
+        sumMax: 100,
+      }),
     ).toBe(false);
     expect(
-      constraintsSatisfied({ front: [1, 2, 3, 10, 11], back: [1, 2], sum: 105 }, { enabled: true, allowConsecutive: true, oddEven: false, bigSmall: false, sumRange: true, sumMin: 110, sumMax: 100 }),
+      constraintsSatisfied(
+        { front: [1, 2, 3, 10, 11], back: [1, 2], sum: 105 },
+        {
+          enabled: true,
+          allowConsecutive: true,
+          oddEven: false,
+          bigSmall: false,
+          sumRange: true,
+          sumMin: 110,
+          sumMax: 100,
+        },
+      ),
     ).toBe(true);
   });
 
@@ -617,13 +666,24 @@ describe('C-8. storage：无 localStorage 环境必须降级不抛异常', () =>
 
   it('脏数据不会导致崩溃', () => {
     // 结构不合法的行会被过滤掉，而不是让后续统计崩溃
-    saveDraws([{ no: '07001', date: '2007-05-30', front: [22, 24, 29, 31, 35], back: [4, 11] }, { no: 1 }, null, 'x'], {});
+    saveDraws(
+      [
+        { no: '07001', date: '2007-05-30', front: [22, 24, 29, 31, 35], back: [4, 11] },
+        { no: 1 },
+        null,
+        'x',
+      ],
+      {},
+    );
     const loaded = loadDraws();
     expect(loaded).toHaveLength(1);
     expect(loaded[0].no).toBe('07001');
 
     // 号码数组内的字符串数字会被归一化为 number 并升序
-    saveDraws([{ no: '07002', date: '2007-06-02', front: ['7', 3, 11, 5, 9], back: ['12', 2] }], {});
+    saveDraws(
+      [{ no: '07002', date: '2007-06-02', front: ['7', 3, 11, 5, 9], back: ['12', 2] }],
+      {},
+    );
     const normalized = loadDraws();
     expect(normalized[0].front).toEqual([3, 5, 7, 9, 11]);
     expect(normalized[0].back).toEqual([2, 12]);

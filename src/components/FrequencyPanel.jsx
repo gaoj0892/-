@@ -90,7 +90,13 @@ function FrequencyChart({ rows, zone }) {
     };
   }, [rows, zone]);
 
-  return <Chart option={option} height={280} ariaLabel={zone === 'front' ? '前区频次柱状图' : '后区频次柱状图'} />;
+  return (
+    <Chart
+      option={option}
+      height={280}
+      ariaLabel={zone === 'front' ? '前区频次柱状图' : '后区频次柱状图'}
+    />
+  );
 }
 
 /**
@@ -117,13 +123,17 @@ function FrequencyTable({ rows, zone, maxCount }) {
         <tbody>
           {rows.map((row) => (
             <tr key={`${zone}-${row.num}`}>
-              <td>{isFront ? <FrontBall n={row.num} size="sm" /> : <BackBall n={row.num} size="sm" />}</td>
+              <td>
+                {isFront ? <FrontBall n={row.num} size="sm" /> : <BackBall n={row.num} size="sm" />}
+              </td>
               <td className="font-medium text-slate-800">{row.count}</td>
               <td className="w-28">
                 <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
                   <div
                     className={isFront ? 'h-full bg-red-500' : 'h-full bg-blue-500'}
-                    style={{ width: `${maxCount > 0 ? Math.round((row.count / maxCount) * 100) : 0}%` }}
+                    style={{
+                      width: `${maxCount > 0 ? Math.round((row.count / maxCount) * 100) : 0}%`,
+                    }}
                   />
                 </div>
               </td>
@@ -135,7 +145,11 @@ function FrequencyTable({ rows, zone, maxCount }) {
                 {row.deviation >= 0 ? '+' : ''}
                 {formatNumber(row.deviation, 1)}
               </td>
-              <td className={row.z >= 2 || row.z <= -2 ? 'font-medium text-amber-700' : 'text-slate-600'}>
+              <td
+                className={
+                  row.z >= 2 || row.z <= -2 ? 'font-medium text-amber-700' : 'text-slate-600'
+                }
+              >
                 {formatNumber(row.z, 2)}
               </td>
             </tr>
@@ -200,7 +214,8 @@ export default function FrequencyPanel({ draws }) {
           <div>
             <h2 className="section-title">号码频率统计</h2>
             <p className="hint mt-1">
-              统计范围内共 {scoped.length} 期。理论概率：前区 5/35 ≈ 14.29%，后区 2/12 ≈ 16.67%（每期独立抽取）。
+              统计范围内共 {scoped.length} 期。理论概率：前区 5/35 ≈ 14.29%，后区 2/12 ≈
+              16.67%（每期独立抽取）。
             </p>
           </div>
           <div className="flex flex-wrap gap-1">
@@ -238,13 +253,18 @@ export default function FrequencyPanel({ draws }) {
       <div className="card card-pad">
         <h3 className="section-title">前区 01-35 频次</h3>
         <FrequencyChart rows={frontRows} zone="front" />
-        <p className="hint mt-1">解读：柱子越高说明该号码在统计范围内出现越多，绿色虚线是理论期望次数；柱子围绕期望线随机波动是正常的。</p>
+        <p className="hint mt-1">
+          解读：柱子越高说明该号码在统计范围内出现越多，绿色虚线是理论期望次数；柱子围绕期望线随机波动是正常的。
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="card card-pad min-w-0">
           <h3 className="section-title mb-2">前区频次明细</h3>
-          <p className="hint mb-2">z 值 =（实际次数 − 期望次数）/ 二项分布标准差。|z| ≥ 2 用琥珀色标出，但 35 个号码同时比较时出现个别 |z| ≥ 2 属于正常的多重比较现象。</p>
+          <p className="hint mb-2">
+            z 值 =（实际次数 − 期望次数）/ 二项分布标准差。|z| ≥ 2 用琥珀色标出，但 35
+            个号码同时比较时出现个别 |z| ≥ 2 属于正常的多重比较现象。
+          </p>
           <FrequencyTable rows={frontRows} zone="front" maxCount={frontMax} />
         </div>
 
@@ -258,7 +278,8 @@ export default function FrequencyPanel({ draws }) {
       </div>
 
       <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs leading-relaxed text-amber-900">
-        <strong>提醒：</strong>频率统计只描述历史数据，不能改变未来每期的开出概率。大乐透每期独立随机，任何历史偏差都不会被「修正」。
+        <strong>提醒：</strong>
+        频率统计只描述历史数据，不能改变未来每期的开出概率。大乐透每期独立随机，任何历史偏差都不会被「修正」。
       </div>
     </div>
   );
