@@ -37,10 +37,9 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Check file size（业务 ≤300 / 测试 ≤400 行）
-        run: node scripts/check-file-size.mjs
-
-      - name: ESLint
+      # npm run lint 内部已按顺序执行 node scripts/check-file-size.mjs 与 eslint，
+      # 此处不再单独跑一次守门脚本，避免同一检查重复执行
+      - name: Lint（文件规模守门 + ESLint --max-warnings 0）
         run: npm run lint
 
       - name: Prettier

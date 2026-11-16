@@ -72,7 +72,8 @@ export default defineConfig({
       reporter: ['text', 'lcov'],
       include: ['src/lib/**/*.js'],
       exclude: ['src/lib/**/*.test.js'],
-      // 基线实测（2026-10，85 用例）：lines 94.77 / statements 94.77 / functions 96.05 / branches 77.71
+      // 基线实测（2026-11-16，89 用例）：
+      // lines 94.84 / statements 94.84 / functions 96.10 / branches 77.8（v8 在 77.75~77.79 间浮动）
       // 阈值取基线下方留 2~5 个百分点，避免浮动即红
       thresholds: {
         lines: 90,

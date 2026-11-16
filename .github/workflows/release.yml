@@ -34,6 +34,11 @@ jobs:
       - name: Install
         run: npm ci
 
+      # 发版门与 CI 门等价：先跑测试，早失败省时间（tag 虽打在已验证的 main 上，
+      # 但 tag 也可能被直接推到任意 commit，故此处不能省）
+      - name: Test
+        run: npx vitest run
+
       - name: Build
         run: npm run build
 

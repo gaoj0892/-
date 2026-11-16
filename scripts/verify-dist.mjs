@@ -140,15 +140,20 @@ const assertions = [
     name: 'app.js 无 ESM 残留',
     run: () => {
       const hasImportMeta = js.includes('import.meta');
-      const hasStaticImport = /(^|\n)\s*import\s+[\w{*]/.test(js);
+      const staticImport = js.match(/(^|\n)\s*import\s+[\w{*]/);
+      // export 分支：`export {}` / `export *` / `export default` / `export const`
+      // 均说明产物仍被当作 module 处理（file:// 下会被 CORS 拦截）
+      const staticExport = js.match(/(^|\n)\s*export\s+[{*a-zA-Z]/);
       return {
-        ok: !hasImportMeta && !hasStaticImport,
-        expected: '不出现 import.meta 且不出现顶层静态 import',
+        ok: !hasImportMeta && !staticImport && !staticExport,
+        expected: '不出现 import.meta，且行首不出现静态 import / export（ESM 语法残留）',
         actual: hasImportMeta
           ? snippet(js.slice(js.indexOf('import.meta') - 40))
-          : hasStaticImport
-            ? snippet(js.match(/(^|\n)\s*import\s+[\w{*][^\n]*/) ?? '')
-            : '未出现',
+          : staticImport
+            ? snippet(staticImport[0])
+            : staticExport
+              ? snippet(staticExport[0])
+              : '未出现',
       };
     },
   },
