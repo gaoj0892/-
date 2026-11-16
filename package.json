@@ -4,11 +4,17 @@
   "version": "1.0.0",
   "type": "module",
   "description": "超级大乐透开奖数据分析与选号辅助（本地单页应用）",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "echarts": "^5.5.1",
@@ -17,6 +23,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/coverage-v8": "^2.1.9",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",

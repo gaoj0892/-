@@ -55,5 +55,20 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['src/**/*.test.{js,jsx}'],
+    // 覆盖率只统计纯逻辑层（src/lib）：React 面板无单元测试，纳入会稀释指标
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'lcov'],
+      include: ['src/lib/**/*.js'],
+      exclude: ['src/lib/**/*.test.js'],
+      // 基线实测（2026-10，85 用例）：lines 94.77 / statements 94.77 / functions 96.05 / branches 77.71
+      // 阈值取基线下方留 2~5 个百分点，避免浮动即红
+      thresholds: {
+        lines: 90,
+        statements: 90,
+        functions: 92,
+        branches: 72,
+      },
+    },
   },
 });
